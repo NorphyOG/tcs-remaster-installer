@@ -1,5 +1,7 @@
 # Lokale Prüfung vom 23.09.2026
 
+**Historischer Stand:** Die spätere Nutzerbestätigung des Spieltests und die aktuelle Veröffentlichung sind im [Prüfstand vom 24.09.2026](VERIFICATION_2026-09-24.md) dokumentiert.
+
 ## Nachtrag 24.09.2026: echte Dateiinstallation
 
 Der erste Installationsversuch endete beim Windows-Schreibprozess mit einer allgemeinen Fehlermeldung; eine Administratorabfrage erschien nicht. Die Fehlerdiagnose unterscheidet jetzt Abbruch, Startfehler mit Windows-Fehlercode und Fehler des erhöhten Arbeiters. Der Assistent wurde anschließend in der normalen Windows-Sitzung gestartet. Der Nutzer bestätigte die Installation ausdrücklich vor dem Klick.

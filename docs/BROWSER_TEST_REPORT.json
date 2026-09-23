@@ -5,6 +5,7 @@
     "Stale EXE-not-found toast clears after successful game-folder check",
     "Automatic preparation visible; external tool download still requires consent",
     "Game-path input and structural preflight worked",
+    "Download action appears before optional account and folder settings",
     "Author-file audit rendered, including alternative Optional files",
     "Premium download is disabled without connected premium account",
     "Nexus key input masked; no prefilled account credential",
@@ -42,7 +43,7 @@
     "Unknown total is explicit and does not erase completed preparation",
     "Old oscillating progress overlay remains hidden",
     "Optional Vader patch remains disabled by default",
-    "Play and game-tested actions unavailable without installed/started build",
+    "Install choice shown first; play actions hidden before installation",
     "Completed installation replaces install prompt and disables repeat installation",
     "Resume action jumps to file verification immediately after installation",
     "Real synthetic installation is hash-verified through UI, but does not certify gameplay",
@@ -53,7 +54,7 @@
     "Stage cards and completion controls remain responsive at 390px",
     "No browser JavaScript exceptions"
   ],
-  "count": 51,
+  "count": 52,
   "screenshots": [
     "04-automation.png",
     "01-downloads.png",
@@ -65,7 +66,8 @@
     "06-original-filter.png",
     "07-pak-bounds.png",
     "08-step-progress.png",
-    "09-download-workflow.png"
+    "09-download-workflow.png",
+    "12-ready-to-play.png"
   ],
   "environment": "win32 Chromium via Playwright",
   "transport_adapter_used": true,

@@ -1,5 +1,13 @@
 # 0.4.0 – Stufenanzeige, Patchimport und geprüfter Start
 
+## Öffentliche Fassung · 24.09.2026
+
+- Downloadaktion steht direkt oben; optionale Nexus-Einstellungen und technische Details sind einklappbar.
+- Nach erfolgreicher Installation stehen Dateiprüfung und Spielstart zuerst. Installations- und Wiederherstellungsoptionen bleiben erreichbar, nehmen aber keinen Platz im Hauptablauf ein.
+- Unveränderte Fortschrittsdaten werden nicht bei jedem Hintergrundintervall erneut aufgebaut.
+- Neues abstraktes GitHub-Banner und aktuelle, als künstlich gekennzeichnete UI-Bilder.
+- Der Nutzer hat eine lokale Installation und die Modfunktion im Spiel bestätigt. Die vollständige Playtest-Checkliste und andere Varianten sind weiterhin offen.
+
 ## Nachbesserung: Windows-Installation und Abschlussanzeige
 
 - Startfehler der Windows-Administratorabfrage liefern jetzt eine unterscheidbare Diagnose. Es gibt keinen direkten Schreib-Fallback ohne UAC.
@@ -24,7 +32,7 @@
 - Letzte bekannte Original-Dateiseiten mit konkreter Dateiauswahl; Nexus-API prüft Metadaten. Keine automatisierte kostenlose Download-Bestätigung.
 - Eigenes Edge-/Chrome-Web-Appfenster und lokales SVG/PNG/ICO-Symbol, normaler Browser als Fallback.
 - Abschlussprüfung jeder installierten Moddatei und bewachter Start der tatsächlich gewählten EXE; Benutzer-Spieltest separat.
-- GitHub-README, Anleitungen, Sicherheits-/Beitragsdateien, Issue-Vorlagen und CI vorbereitet. Nichts veröffentlicht.
+- GitHub-README, Anleitungen, Sicherheits-/Beitragsdateien, Issue-Vorlagen und CI für die Veröffentlichung vorbereitet.
 - Automatik behält sichere Stops, Prüfungen, Wiederherstellung und bereits geprüfte PAK-/DAT-Zwischenstände.
 
 Die sechs lokal importierten Modarchive wurden für Vergleich und Installation gelesen. Aktuelle Nexus-API-Downloads, das separate Windows-Appfenster und der Spielstart wurden nicht geprüft. Synthetische Prüfungen und lokale Ergebnisse siehe docs/TEST_REPORT.json und docs/VERIFICATION_2026-09-23.md. Kein fertiges Komplett-Remake.

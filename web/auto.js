@@ -1,5 +1,5 @@
 'use strict';
-let lastJobId='', autoSyncing=false,autoPollBusy=false,nexusFiles=new Map(),lastObservedImport=null;
+let lastJobId='', autoSyncing=false,autoPollBusy=false,nexusFiles=new Map(),lastObservedImport=null,lastRenderedJob='';
 function recordObservedJob(job){if(job?.id&&!job.running)lastJobId=job.id;}
 function recordObservedState(state){recordObservedJob(state.job);const event=state.workflow?.last_import?.event_id;if(event)lastObservedImport=event;}
 function autoPayload(){return {allow_tools:$('allowTools').checked,auto_mapping:$('autoMapping').checked,desktop_shortcut:$('desktopShortcut').checked,auto_watch:$('autoWatchDownloads').checked,auto_nexus:$('autoNexusDownloads').checked};}
@@ -119,10 +119,16 @@ document.addEventListener('change',e=>{
 
 function renderJob(job){
  if(!job||!$('jobPanel'))return;
+ const snapshot=JSON.stringify(job);
+ if(snapshot===lastRenderedJob)return;
+ lastRenderedJob=snapshot;
  if(job.steps&&typeof renderJourney==='function')renderJourney(job.steps);
  const visible=!!(job.id||job.error||(job.logs||[]).length);
  $('jobPanel').hidden=!visible;if(!visible)return;
- $('jobPhase').textContent=job.phase_label||'Arbeitsschritt';
+ const active=job.running||!!job.error||['waiting','cancelled','interrupted'].includes(job.status);
+ const main=document.querySelector('main.main'),panel=$('jobPanel');
+ main.insertBefore(panel,active?$('step1'):$('journeyPanel'));
+ $('jobPhase').textContent=job.status==='success'?'Letzter Auftrag abgeschlossen':job.phase_label||'Arbeitsschritt';
  const labels={running:'Arbeitet',error:'Pausiert · Fehler',cancelled:'Pausiert',interrupted:'Unterbrochen',waiting:'Wartet auf Downloads / Prüfung',success:'Arbeitsschritt abgeschlossen',idle:'Bereit'};
  $('jobStatus').textContent=labels[job.status]||'Status';
  $('jobStatus').className='pill'+(job.error?' bad':job.status==='success'?' good':'');

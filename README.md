@@ -1,16 +1,15 @@
 # TCS Remaster Installer
 
+![TCS Remaster Installer – abstraktes Lichtmotiv mit den Schritten Download, Zusammenführen, Installation und Spielstart](docs/media/installer-hero.jpg)
+
 **Lokaler Windows-Modpack-Installer für LEGO Star Wars: The Complete Saga.**
 
-**Projektprofil:** [NorphyOG auf GitHub](https://github.com/NorphyOG) · [English overview](README.en.md)
+**[Installer herunterladen](https://github.com/NorphyOG/tcs-remaster-installer/releases) · [Anleitung](docs/GETTING_STARTED.md) · [English overview](README.en.md)**
 
-![Info-Sektion mit GitHub-Link in der lokalen Installer-Oberfläche](docs/10-project-info.png)
-*Bild: lokal gestarteter Assistent ohne Spiel- oder Moddateien; kein Gameplay-Nachweis.*
+Downloads zuordnen, Originaldaten vorbereiten, Modkonflikte automatisch prüfen, Sicherungen anlegen und den ausgewählten Spielbuild starten. **Version 0.4.0 · technische Vorschau.** Keine Spiel- oder Moddateien enthalten. Der Nutzer hat eine lokale Installation mit Mods im Spiel bestätigt; weitere Varianten und die vollständige Playtest-Checkliste sind offen.
 
-Downloads zuordnen, Originaldaten vorbereiten, Modkonflikte prüfen, Sicherungen anlegen und den tatsächlich ausgewählten Spielbuild starten. **Version 0.4.0 · technische Vorschau.** Keine Spiel- oder Moddateien enthalten. Kein komplettes Grafik-Remake und kein Spieltest-Nachweis.
-
-![TCS Remaster Installer – sieben getrennte Fortschrittsstufen](docs/08-step-progress.png)
-*Bild: echte Installer-Oberfläche mit ausdrücklich künstlichen Testdaten, kein Spiel-Screenshot.*
+![Vereinfachter Spielstart nach Dateiprüfung in der Installer-Oberfläche](docs/12-ready-to-play.png)
+*Bild: Browserprüfung mit künstlichen Testdaten; kein Spiel-Screenshot.*
 
 ## In fünf Schritten starten
 
@@ -18,12 +17,12 @@ Downloads zuordnen, Originaldaten vorbereiten, Modkonflikte prüfen, Sicherungen
 2. `README.html` öffnen; anschließend **`STARTEN.cmd`** doppelklicken. Der Installer nutzt ein eigenes Edge-/Chrome-Appfenster. Alternativ: `IM_BROWSER.cmd`.
 3. Deine eigene installierte PC-Kopie auswählen. Originalzustand und Werkzeugdownload einmal bestätigen. **„Vorbereiten + automatisch installieren“** starten.
 4. **„Nächste fehlende Datei öffnen“** drücken und auf Nexus herunterladen. Der Assistent beobachtet nach Freigabe deinen gewählten Downloadordner **und `mods` neben `STARTEN.cmd`**. Nur vollständige passende Archive werden übernommen; nicht selbst entpacken.
-5. Eindeutige passende Varianten werden zugeordnet. Unbekannte Fassungen oder echte Konflikte erfordern Prüfung. Nach Installation folgen SHA-256-Dateiprüfung und **„Geprüften Spielbuild starten“**. Die Mods anschließend im Spiel selbst kontrollieren.
+5. Eindeutige passende Varianten werden zugeordnet. Unbekannte Fassungen oder echte Konflikte erfordern Prüfung. Nach Installation folgen SHA-256-Dateiprüfung und **„Geprüften Build starten“**. Die Mods anschließend im Spiel selbst kontrollieren.
 
 **Zusammenführen läuft automatisch:** Der Dateivergleich übernimmt bekannte Autorendateien in dokumentierter Reihenfolge, regelt zehn geprüfte Text-/Skriptdateien über vollständige SHA-256-Werte und vereint weitere nicht überlappende Textänderungen mit bestätigter unveränderter Referenz. Du musst keine Variante pro Datei auswählen. Unbekannte Kombinationen stoppen sicher; der Prüfbericht nennt den Grund. [Regeln und Grenzen](docs/MOD_COMPATIBILITY.md).
 
-![Alle sechs Schritte bleiben im schmalen Fenster oben erreichbar](docs/11-narrow-navigation.png)
-*Bild: künstliche Testinstallation bei 390 px Fensterbreite; keine echten Mods.*
+![Downloadaktion steht vor den optionalen Einstellungen](docs/09-download-workflow.png)
+*Bild: Browserprüfung mit künstlichen Testdaten; keine echten Mods.*
 
 Ohne Nexus Premium bleiben die Downloadbestätigungen auf Nexus nötig. Kein Paywall-/Warteschlangen-Bypass. Nexus-Schlüssel sind optional und werden nur im RAM gehalten. ReShade-/ASI-Runtimes sind nicht Bestandteil der automatischen Dateninstallation.
 
@@ -53,7 +52,7 @@ Dateiquellen, Versionen, Herkunft der Dateinummern und Abhängigkeiten stehen in
 
 ## Voraussetzungen und Grenzen
 
-Windows 10/11, eigene installierte TCS-PC-Kopie, ausreichend freier Platz für Originaldaten, Arbeitskopien und Backups. Python 3.10+; der Starter bietet eine lokale Runtime nach Bestätigung. Die komplette Windows-Kette und echte Spiel-/Modarchive sind nicht durch die synthetischen Tests abgedeckt. [Testumfang](docs/TESTING.md).
+Windows 10/11, eigene installierte TCS-PC-Kopie, ausreichend freier Platz für Originaldaten, Arbeitskopien und Backups. Python 3.10+; der Starter bietet eine lokale Runtime nach Bestätigung. Der Nutzer hat seine eigene Installation und die Modfunktion im Spiel bestätigt. Die synthetischen Tests decken nicht jede Modvariante, Runtime-Erweiterung oder Rücknahme ab. [Testumfang](docs/TESTING.md).
 
 Der Installer patcht keine Spiel-EXE, lädt keine Crack-DLL, verteilt keine Spiel-/Modarchive und führt keinen importierten Modcode aus. Für Mods mit zusätzlichen Runtime-/EXE-Voraussetzungen ersetzt ein bestandener Datei-Abgleich **nicht** die Autorenanleitung oder einen Spieltest. [Sicherheit](SECURITY.md).
 
@@ -62,11 +61,11 @@ Der Installer patcht keine Spiel-EXE, lädt keine Crack-DLL, verteilt keine Spie
 - [Installation und Update](docs/GETTING_STARTED.md) · [Automatik und Fortschritt](docs/AUTOMATION.md)
 - [Moddateien und Varianten](docs/MOD_COMPATIBILITY.md) · [Fehler beheben](docs/TROUBLESHOOTING.md)
 - [Architektur](docs/ARCHITECTURE.md) · [Mitentwickeln](CONTRIBUTING.md) · [Tests](docs/TESTING.md)
-- [GitHub-Veröffentlichung vorbereiten](docs/GITHUB_PUBLISHING.md) · [Änderungen](RELEASE_NOTES.md)
-- [Prüfstand vom 23.09.2026](docs/VERIFICATION_2026-09-23.md)
+- [GitHub-Veröffentlichung](docs/GITHUB_PUBLISHING.md) · [Änderungen](RELEASE_NOTES.md)
+- [Aktueller Prüfstand](docs/VERIFICATION_2026-09-24.md) · [Installationsbericht](docs/VERIFICATION_2026-09-23.md)
 
-## Privates GitHub-Repository
+## GitHub und Rechte
 
-Der geprüfte Quellstand liegt zunächst **privat** unter [NorphyOG/tcs-remaster-installer](https://github.com/NorphyOG/tcs-remaster-installer). Der Button **„Weitergeben → GitHub-/Upload-ZIP erstellen“** exportiert nur explizit freigegebene Quelldateien und Dokumentation; er lädt nichts selbst hoch. Vor jedem späteren Sichtbarkeitswechsel ist eine eigene Prüfung nötig. Keine `.local`-Daten, Modarchive, Spielpfade, API-Schlüssel, Backups oder Browserprofile. CI und Vorlagen liegen unter `.github`.
+Das [öffentliche Repository](https://github.com/NorphyOG/tcs-remaster-installer) enthält den eigenen Quellcode, Anleitung, künstliche Testbilder und Prüfsummen. Der Button **„Installer-ZIP erstellen“** exportiert nur Dateien der Positivliste; er lädt nichts selbst hoch. `.local`-Daten, Modarchive, Spielpfade, API-Schlüssel, Backups und Browserprofile gehören nicht in Issues oder Releases. CI und Vorlagen liegen unter `.github`.
 
 **Rechte:** Eigenständiges, inoffizielles Community-Werkzeug, nicht von LEGO, Lucasfilm, Disney, TT Games oder Nexus Mods. Namen dienen der Beschreibung der Kompatibilität. Fremde Mods bleiben bei ihren Autoren; deren Rechte und Bedingungen gelten unverändert. Der eigene Quellcode steht unter [MIT](LICENSE); siehe [Credits](CREDITS.md).

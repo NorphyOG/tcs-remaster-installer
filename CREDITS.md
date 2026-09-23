@@ -1,6 +1,6 @@
 # Credits und Quellen
 
-Eigener Installer, Browseroberfläche, Drei-Wege-Vergleich, Rezept und eigener Classic-Plus-Shader: MIT, siehe LICENSE. Kein Originalspielcode übernommen. Keine fremden Modarchive oder Original-Spielbilder sind im öffentlichen Paket enthalten. Die Illustrationen in der README sind Screenshots der eigenen Installeroberfläche; Zuordnungs-/Konfliktbilder enthalten markierte synthetische Testdaten.
+Eigener Installer, Browseroberfläche, Drei-Wege-Vergleich, Rezept und eigener Classic-Plus-Shader: MIT, siehe LICENSE. Kein Originalspielcode übernommen. Keine fremden Modarchive oder Original-Spielbilder sind im öffentlichen Paket enthalten. Das abstrakte GitHub-Banner wurde für dieses Projekt mit Bildgenerierung erstellt und enthält keine Spielfiguren oder Moddateien. Die Oberflächenbilder zeigen künstliche Testdaten.
 
 ## Modautoren / Originaldownloads
 

@@ -4,7 +4,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 let token=location.hash.slice(1)||sessionStorage.getItem('tcs-session-token');
 if(token){sessionStorage.setItem('tcs-session-token',token);history.replaceState(null,'',location.pathname);}
-let app=null,plan=null,gameInfo=null,dirty=true,pendingModule=null,conflictPage=0;
+let app=null,plan=null,gameInfo=null,dirty=true,pendingModule=null,conflictPage=0,lastInstallLayout=null;
 const decisions={};
 function error(e){$('toastText').textContent=e.message||String(e);$('toast').hidden=false;}
 async function api(path,data,method='POST'){
@@ -22,7 +22,7 @@ function updateNextStep(){
  const n=nextStepNumber(),button=$('resumeStepBtn');
  button.dataset.step=String(n);
  button.textContent=app?.state.installed_game
-  ?app.state.readiness?.user_reported_game_test?'Spieltest ansehen →':app.state.readiness?.can_launch?'Zum Spielstart →':'Zur Installationsprüfung →'
+  ?app.state.readiness?.can_launch?'Zum Spielstart →':'Zur Installationsprüfung →'
   :`Zu Schritt ${n}: ${stepNames[n]} →`;
 }
 function step(n){
@@ -89,9 +89,12 @@ function renderConflicts(){
  $('conflictPaging').innerHTML=items.length>30?`<button class="small" id="prevPage" ${conflictPage===0?'disabled':''}>←</button><small>Seite ${conflictPage+1} / ${pages} · ${items.length} Konflikte</small><button class="small" id="nextPage" ${conflictPage>=pages-1?'disabled':''}>→</button>`:'';
 }
 function updateGates(){const ready=!!plan&&!dirty&&plan.counts.conflicts===0;const installed=!!app?.state.installed_game;$('toInstallBtn').disabled=!ready;$('buildBtn').disabled=!ready;const direct=ready&&app?.platform==='nt'&&$('cleanTarget').checked&&$('prepared').checked;
- $('installBtn').disabled=!direct||installed;$('launchBtn').disabled=!installed;
- $('installGate').textContent=installed?(app.state.readiness?.can_launch?'Moddateien installiert und geprüft. Jetzt den Spielstart testen oder bei Bedarf die Sicherung wiederherstellen.':'Moddateien installiert. Vor dem Spielstart die Installation erneut prüfen.'):!ready?'Für diesen Stand fehlt ein aufgelöster, aktueller Prüfbericht. In Schritt 4 erneut vergleichen.':direct?'Dateiplan bereit. Die vorbereitete Spielkopie wird vor dem Kopieren gesichert.':'Mod-ZIP kann gebaut werden. Für Direktinstallation zusätzlich Windows und die bestätigten Voraussetzungen aus Schritt 1 nötig.';
+ $('installBtn').disabled=!direct||installed;
+ document.body.classList.toggle('has-install',installed);
+ if(lastInstallLayout!==installed){$('buildOptions').open=!installed;lastInstallLayout=installed;}
+ $('installGate').textContent=installed?(app.state.readiness?.user_reported_game_test?'Installation geprüft. Spiel und Mods vom Benutzer bestätigt.':app.state.readiness?.can_launch?'Moddateien installiert und geprüft. Jetzt den Spielstart testen.':'Moddateien installiert. Vor dem Spielstart die Installation erneut prüfen.'):!ready?'Für diesen Stand fehlt ein aufgelöster, aktueller Prüfbericht. In Schritt 4 erneut vergleichen.':direct?'Dateiplan bereit. Die vorbereitete Spielkopie wird vor dem Kopieren gesichert.':'Mod-ZIP kann gebaut werden. Für Direktinstallation zusätzlich Windows und die bestätigten Voraussetzungen aus Schritt 1 nötig.';
  $('installGate').className='notice'+((installed?!!app.state.readiness?.can_launch:ready)?' good':'');
+ $('playPanelTitle').textContent=app?.state.readiness?.user_reported_game_test?'Bereit zum Spielen':'Abschlussprüfung & Spielstart';
  if(installed){const summary=installedSummary();$('autoHeadline').textContent=summary.headline;$('autoMessage').textContent=summary.message;}}
 async function busyJob(start,title){
  $('progress').hidden=true;$('progress').classList.remove('done');$('hideProgressBtn').hidden=true;$('progressTitle').textContent=title;$('progressLog').textContent='';document.body.classList.add('busy');
@@ -150,7 +153,6 @@ async function handleClick(event){
  case 'installBtn':if(!confirm('Die aufgelösten Dateien jetzt in die gewählte vorbereitete Spielkopie installieren? Betroffene Dateien werden gesichert. Spiel vorher schließen.'))return;{const r=await busyJob(()=>api('install',{plan_id:plan.id,confirmation:'INSTALL'}),'Sichere und installiere');await loadState();showResult(r);}break;
  case 'buildBtn':{const r=await busyJob(()=>api('build',{plan_id:plan.id}),'Baue lokale Mod-ZIP');await loadState();showResult(r);}break;
  case 'restoreBtn':if(confirm('Dateien der letzten Installation wiederherstellen? Später geänderte Dateien führen zu einem Stopp statt zu Datenverlust.')){const r=await busyJob(()=>api('restore',{game:$('gamePath').value.trim(),confirmation:'RESTORE'}),'Stelle Sicherungen wieder her');await loadState();showResult(r);markDirty();}break;
- case 'launchBtn':await startCheckedGame();break;
  case 'exportBtn':{const r=await api('export',{});await download('installer',r.name);break;}
  case 'openInstallerFolderBtn':await api('open-result',{kind:'installer'});break;
  case 'openBuildBtn':await api('open-result',{kind:'build'});break;

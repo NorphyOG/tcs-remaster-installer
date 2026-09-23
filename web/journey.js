@@ -1,7 +1,11 @@
 'use strict';
 const stageStatus={pending:'Noch offen',running:'Läuft',waiting:'Wartet',done:'Fertig',error:'Prüfung nötig',paused:'Pausiert'};
+let lastJourneySnapshot='',lastInventorySnapshot='';
 function renderJourney(data){
  if(!data||!$('journeyStages'))return;
+ const snapshot=JSON.stringify(data)+String(!!app?.state.readiness?.user_reported_game_test);
+ if(snapshot===lastJourneySnapshot)return;
+ lastJourneySnapshot=snapshot;
  $('journeyCount').textContent=`${data.completed} / ${data.total} Schritte fertig`;
  $('journeySegments').innerHTML=data.stages.map(s=>`<span class="${esc(s.status)}"></span>`).join('');
  $('journeyStages').innerHTML=data.stages.map((s,i)=>{
@@ -10,18 +14,23 @@ function renderJourney(data){
   const label=s.status==='done'?'100 %':known?Math.round(percent)+' % Teilaufgabe':s.status==='running'?'Gesamtmenge noch offen':stageStatus[s.status];
   const fmt=n=>Number(n).toLocaleString('de-DE');
   const counts=known?`${fmt(p.done)} / ${fmt(p.total)} ${p.unit==='Bytes'?'Bytes':p.unit}`:'';
-  return `<article class="stage-card ${esc(s.status)}" data-stage="${esc(s.id)}"><div class="stage-title"><span class="stage-number">${s.status==='done'?'✓':String(i+1).padStart(2,'0')}</span><strong>${esc(s.title)}</strong><span class="stage-label">${esc(stageStatus[s.status])}</span></div><div class="stage-meter ${!known&&s.status==='running'?'unmeasured':''}" role="progressbar" aria-label="${esc(s.title)}" ${known||s.status==='done'?`aria-valuenow="${Math.round(percent)}" aria-valuemin="0" aria-valuemax="100"`:''} aria-valuetext="${esc(label)}"><span style="width:${percent}%"></span></div><div class="stage-value"><b>${esc(label)}</b><small>${esc(counts)}</small></div><p class="stage-detail">${esc(s.detail)}</p></article>`;
+  const detail=s.id==='verify'&&app?.state.readiness?.user_reported_game_test?'Dateien geprüft; Spieltest vom Benutzer bestätigt.':s.detail;
+  return `<article class="stage-card ${esc(s.status)}" data-stage="${esc(s.id)}"><div class="stage-title"><span class="stage-number">${s.status==='done'?'✓':String(i+1).padStart(2,'0')}</span><strong>${esc(s.title)}</strong><span class="stage-label">${esc(stageStatus[s.status])}</span></div><div class="stage-meter ${!known&&s.status==='running'?'unmeasured':''}" role="progressbar" aria-label="${esc(s.title)}" ${known||s.status==='done'?`aria-valuenow="${Math.round(percent)}" aria-valuemin="0" aria-valuemax="100"`:''} aria-valuetext="${esc(label)}"><span style="width:${percent}%"></span></div><div class="stage-value"><b>${esc(label)}</b><small>${esc(counts)}</small></div><p class="stage-detail">${esc(detail)}</p></article>`;
  }).join('');
 }
 function renderInventory(rows){
  if(!$('inventoryStatus'))return;
+ const snapshot=JSON.stringify(rows);
+ if(snapshot===lastInventorySnapshot)return;
+ lastInventorySnapshot=snapshot;
  $('inventoryStatus').innerHTML=rows.filter(r=>r.enabled||r.imported).map(r=>`<div><strong>${esc(r.name)}</strong><span class="pill ${r.ready?'good':''}">${!r.enabled?'Optional · nicht aktiv':r.ready?'Zugeordnet':r.imported?'Prüfen':'Download fehlt'}</span>${r.review_reason?`<small>${esc(r.review_reason)}</small>`:''}</div>`).join('');
 }
 function renderReadiness(){
  if(!app||!$('readinessStatus'))return;
  const r=app.state.readiness;
  $('playCheckedBtn').disabled=!app.state.installed_game||document.body.classList.contains('busy');
- $('confirmGameBtn').disabled=!r?.launch_requested;
+ $('confirmGameBtn').disabled=!r?.launch_requested||!!r?.user_reported_game_test;
+ $('confirmGameBtn').textContent=r?.user_reported_game_test?'Spieltest bestätigt':'Spiel & Mods funktionieren';
  $('readinessStatus').textContent=r?.can_launch?`${r.checked_files} installierte Dateien geprüft. ${r.user_reported_game_test?'Spieltest vom Benutzer bestätigt.':r.launch_requested?'Startbefehl gesendet; Spieltest noch bestätigen.':'Spieltest noch offen.'}`+(r.warnings?.length?' '+r.warnings.join(' '):''):'Erst installieren. Anschließend wird jede Moddatei gegen das Installationsjournal geprüft.';
 }
 async function startCheckedGame(){

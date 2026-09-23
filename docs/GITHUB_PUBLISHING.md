@@ -1,6 +1,6 @@
-# GitHub-Repository – privater Entwurf
+# GitHub-Veröffentlichung
 
-**Ein öffentlicher Release ist nicht freigegeben.** Der Quellstand liegt unter [NorphyOG/tcs-remaster-installer](https://github.com/NorphyOG/tcs-remaster-installer) als **privates** Repository. Rechte an Original-Spielinhalten oder fremden Mods werden dadurch nicht übertragen.
+Das [öffentliche Repository](https://github.com/NorphyOG/tcs-remaster-installer) enthält nur den Installer-Quellcode und eigene Dokumentation. Spiel, Mods, Backups und lokale Arbeitsdaten werden nicht verteilt. Die MIT-Lizenz betrifft nur unseren Code; die Rechte an Spiel und fremden Mods bleiben bei ihren Inhabern.
 
 ## Repository auffindbar beschreiben
 
@@ -20,14 +20,15 @@ lego-star-wars the-complete-saga tcs modding modpack mod-manager windows python 
 
 Die Begriffe beschreiben die tatsächliche Funktion. Keine „official“, „complete remake“, „fully tested“ oder garantierte Ein-Klick-Kompatibilität behaupten. README mit erster Anleitung und gekennzeichnetem Screenshot beibehalten; deutsche und englische Suchbegriffe sinnvoll, keine Keyword-Wiederholungen.
 
-## Vor dem Upload
+## Nutzung und Release
 
-1. Im Installer „Weitergeben → GitHub-/Upload-ZIP erstellen“ wählen. **Nicht** deinen Arbeitsordner einschließlich `.local` hochladen.
-2. Export separat entpacken und `SHA256SUMS.txt` sowie Dateiliste prüfen. Keine Modarchive, Diagnose-Personendaten oder Spielpfade hinzufügen.
-3. Tests lokal ausführen; tatsächliche Grenzen in Release-Text und README behalten.
-4. Änderungen nur in den geprüften Quellstand übernehmen und in das bestehende **private** Repository pushen. `git remote -v`, Commit und die GitHub-Einstellung **Private** danach kontrollieren.
-5. Vor einem späteren Wechsel auf **Public** Quellstand, Commit-Historie, Lizenz-/Markenhinweise, Release-Archiv und echte Windows-/Spieltests erneut prüfen. Dieser Wechsel braucht eine eigene Entscheidung.
-6. Für einen Release Versionsnummer, ZIP, SHA-256, Änderungsübersicht und Testbericht zusammen bereitstellen. Kein Auto-Publishing-Workflow enthalten.
+1. Unter [Releases](https://github.com/NorphyOG/tcs-remaster-installer/releases) die vorbereitete Installer-ZIP laden. Die GitHub-„Source code“-ZIP ist keine vollständige Installer-Verteilung.
+2. ZIP außerhalb des Spielordners entpacken, `README.html` lesen und `STARTEN.cmd` ausführen. Mods selbst bei den Autoren herunterladen.
+3. Für eine neue Version die Python- und Browserprüfungen ausführen, den öffentlichen Export prüfen und `SHA256SUMS.txt` neu erzeugen.
+4. `publish-allowlist.json`, Git-Historie und Release-ZIP auf `.local`, Modarchive, Diagnosen, private Pfade und Schlüssel prüfen. Nie den gesamten Arbeitsordner hochladen.
+5. Release mit ZIP, SHA-256, Änderungen und Testgrenzen versehen. Kein Auto-Publishing-Workflow ist eingerichtet.
+
+Das neue [abstrakte Banner](media/installer-hero.jpg) enthält keine Spielfiguren oder Modinhalte und dient als GitHub Social Preview. Screenshots sind als Installer-Oberfläche mit künstlichen Testdaten gekennzeichnet.
 
 ## Profil optional
 

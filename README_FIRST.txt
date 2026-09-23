@@ -17,4 +17,4 @@ IM_BROWSER.cmd = ausdrücklich normaler Browser.
 START_SPIEL.cmd = installierten Build prüfen und dessen Original-EXE starten.
 
 Dateien geprüft bedeutet nicht: Spielstart, Modkompatibilität oder ReShade getestet.
-Öffentliche ZIP enthält keine fremden Mod-/Spielarchive. Nichts wird veröffentlicht.
+Die öffentliche Installer-ZIP enthält keine fremden Mod-/Spielarchive.

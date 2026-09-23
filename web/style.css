@@ -13,6 +13,12 @@
 
 /* Keep the current task and all six destinations reachable in the narrow app window. */
 .step{scroll-margin-top:18px}
+body:not(.has-install) #playPanel{display:none}
+#buildOptions>.option-grid{margin-top:18px}
+#buildOptions>.panel,#maintenanceOptions>.panel{margin-top:18px;margin-bottom:0}
+.technical-info{background:#101926}
+#step6 .listline{justify-content:flex-start}
+#step6 .listline strong{flex:0 0 95px;color:var(--accent)}
 .overview-actions{display:flex;flex-direction:column;align-items:flex-end;gap:9px;flex-shrink:0}
 .overview-actions .pill{white-space:nowrap}
 .overview-actions button{max-width:100%;text-align:center}
