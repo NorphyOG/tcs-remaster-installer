@@ -1,6 +1,18 @@
 # Lokale Prüfung vom 23.09.2026
 
-## Aktueller Nachtrag: automatisches Zusammenführen und Navigation
+## Nachtrag 24.09.2026: echte Dateiinstallation
+
+Der erste Installationsversuch endete beim Windows-Schreibprozess mit einer allgemeinen Fehlermeldung; eine Administratorabfrage erschien nicht. Die Fehlerdiagnose unterscheidet jetzt Abbruch, Startfehler mit Windows-Fehlercode und Fehler des erhöhten Arbeiters. Der Assistent wurde anschließend in der normalen Windows-Sitzung gestartet. Der Nutzer bestätigte die Installation ausdrücklich vor dem Klick.
+
+Mit den sechs lokal importierten Modarchiven wurde der frische Plan mit **2.110 Zieldateien, 220 automatischen Überlagerungen und 0 offenen Konflikten** installiert. Das lokale Sicherungsjournal meldet `INSTALLED` und enthält 2.110 Einträge. Der anschließende Dateivergleich meldet `FILES_VERIFIED_NOT_GAME_TESTED`; der Installationsauftrag endete mit `success`. Nach Neuladen zeigt die Oberfläche „Mods installiert“ und sperrt eine zweite Direktinstallation. Originalspiel und Modarchive bleiben ausschließlich lokal und sind nicht im GitHub-Code oder Export-ZIP enthalten.
+
+Die erneute Windows-Testsuite lief mit **363 Tests: 361 erfolgreich, 2 wegen fehlender Symlink-Rechte übersprungen**. Die Browser-Smoke-Suite bestand **48 Prüfungen** mit lokalem Test-Transportadapter; direkte Browsernavigation und OS-Downloads wurden dabei nicht geprüft.
+
+Das neu gebaute Code-ZIP enthält **99 Dateien der Positivliste** mit **98 abgeglichenen SHA-256-Einträgen**. Lokale Spiel-, Mod-, Sitzungs- und Sicherungsdaten sind ausgeschlossen.
+
+**Offen:** Ein Spielstart und die Funktion der Mods im Spiel wurden nicht geprüft. Insbesondere Zusatzlevel, Grafikprofil und Laufzeitabhängigkeiten sind dadurch nicht freigegeben. Die älteren Aussagen unten beschreiben den jeweiligen Prüfstand vor dieser Installation.
+
+## Voriger Nachtrag: automatisches Zusammenführen und Navigation
 
 Der ursprüngliche ZIP-Befund unten bleibt als Eingangskontrolle erhalten. Nach der UI- und Merge-Änderung wurden **359 Python-Tests** außerhalb der eingeschränkten Dateisandbox ausgeführt: 358 bestanden, einer regulär übersprungen. Der zusätzliche Test zur Symlink-Erstellung wurde ausgelassen, weil diesem Windows-Konto das dafür erforderliche Recht fehlt (`WinError 1314`). Die aktuelle Browser-Smoke-Suite bestand **46 Prüfungen** mit installiertem Chrome auf Windows und einem **lokalen Test-Transportadapter**; Browsernavigation/Sitzungsübergabe und echte OS-Downloads wurden damit nicht geprüft.
 

@@ -90,6 +90,7 @@
     "tests/test_safety.py",
     "tests/test_server.py",
     "tests/test_workflow.py",
+    "tests/test_windows_elevation.py",
     "tools/setup_runtime.ps1",
     "web/app.js",
     "web/auto.js",

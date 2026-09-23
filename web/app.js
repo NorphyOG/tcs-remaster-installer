@@ -67,12 +67,18 @@ function renderModules(){
   return `<article class="panel" data-module="${m.id}"><div class="module-heading"><div><small>REIHENFOLGE ${i+1}</small><h2>${esc(m.name)}</h2></div><label class="check" style="margin:0"><input type="checkbox" data-enabled="${m.id}" ${sel.enabled?'checked':''}>Aktiv</label></div><label><small>Passendes Archiv oder entpackter Ordner</small><select data-source="${m.id}"><option value="">Bitte Quelle wählen …</option>${app.state.sources.map(s=>`<option value="${s.id}" ${sel.source_id===s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label><div class="rootlist">${roots.length?roots.map(r=>`<label class="check ${sel.roots.includes(r)?'selected':''}"><input type="checkbox" data-root-module="${m.id}" data-root="${esc(r)}" ${sel.roots.includes(r)?'checked':''}><span><strong>${esc(r||'(direkte CHARS/STUFF/LEVELS-Ordner)')}</strong><br><small>${source.root_counts[r]||0} Datendateien · nur dieser Teil, keine alternativen Unterpakete</small></span></label>`).join(''):'<div class="empty">Erst das passende Archiv in Schritt 2 hinzufügen.</div>'}</div>${source?`<div class="row spaced" style="margin-top:12px"><small>Archiv-Hash ${esc(source.archive_sha256?.slice(0,16)||'Ordnerquelle')} · nicht mit Autorenhash verifiziert</small><button class="small" data-suggest="${m.id}">Ordner vorschlagen</button></div>`:''}<label class="check"><input type="checkbox" data-confirm="${m.id}" ${sel.confirmed?'checked':''}><span><strong>Datei, Variante und Unterordner sind richtig.</strong><br><small>${esc(m.file)}${m.root_mode==='classic'?' · gemeinsame Dateien + Classic-Icons':''}</small></span></label></article>`;
  }).join('');
 }
+function installedSummary(){
+ const readiness=app?.state.readiness;
+ if(readiness?.user_reported_game_test)return {headline:'Spieltest bestätigt.',message:'Du hast Spielstart und Modfunktion im Spiel bestätigt.'};
+ if(readiness?.can_launch)return {headline:'Mods installiert · jetzt im Spiel testen.',message:'Installierte Dateien geprüft. Der Spieltest steht noch aus.'};
+ return {headline:'Mods installiert · Dateien erneut prüfen.',message:'Die letzte Dateiprüfung ist nicht gültig. Installation erneut prüfen, bevor du das Spiel startest.'};
+}
 function renderPlan(){
  if(!plan)return;const c=plan.counts;
  $('metrics').innerHTML=[['Dateien',c.files],['Automatische Überlagerungen',c.recipe_overlays||0],['Automatische Text-Merges',c.text_merges||0],['Offene Konflikte',c.conflicts]].map(([label,value])=>`<div class="metric"><strong>${value.toLocaleString('de-DE')}</strong><span>${label}</span></div>`).join('');
  $('downloadReportBtn').disabled=false;$('conflictTools').hidden=!c.conflicts;
  $('planFreshness').textContent=dirty?'Auswahl geändert. Erneut vergleichen.':c.conflicts?'Unbekannte Kollisionen bleiben gesperrt.':'Bekannte Überschneidungen automatisch geregelt · Spieltest offen';
- if(!dirty&&!c.conflicts){$('autoHeadline').textContent='Dateiplan bereit · als Nächstes installieren';$('autoMessage').textContent='Bekannte Dateikollisionen automatisch geregelt. Installation und Spieltest stehen noch aus.';}
+ if(!dirty&&!c.conflicts&&!app?.state.installed_game){$('autoHeadline').textContent='Dateiplan bereit · als Nächstes installieren';$('autoMessage').textContent='Bekannte Dateikollisionen automatisch geregelt. Installation und Spieltest stehen noch aus.';}
  renderConflicts();updateGates();
 }
 function renderConflicts(){
@@ -80,10 +86,11 @@ function renderConflicts(){
  $('conflicts').innerHTML=page.length?page.map(r=>`<article class="conflict"><span class="path">${esc(r.path)}</span><span class="pill bad">Automatik angehalten</span><p class="desc" style="margin:10px 0 0">${esc(r.reason)}</p><div class="row"><button class="small" data-preview="${esc(r.key)}">Unterschied ansehen</button></div></article>`).join(''):`<div class="notice good">${plan.counts.conflicts?'Keine Treffer für diesen Filter.':'Keine ungelösten Dateikonflikte. Der Build kann erstellt werden. Das ist keine In-Game-Kompatibilitätsfreigabe.'}</div>`;
  $('conflictPaging').innerHTML=items.length>30?`<button class="small" id="prevPage" ${conflictPage===0?'disabled':''}>←</button><small>Seite ${conflictPage+1} / ${pages} · ${items.length} Konflikte</small><button class="small" id="nextPage" ${conflictPage>=pages-1?'disabled':''}>→</button>`:'';
 }
-function updateGates(){const ready=!!plan&&!dirty&&plan.counts.conflicts===0;$('toInstallBtn').disabled=!ready;$('buildBtn').disabled=!ready;const direct=ready&&app?.platform==='nt'&&$('cleanTarget').checked&&$('prepared').checked;
- $('installBtn').disabled=!direct;$('launchBtn').disabled=!app?.state.installed_game;
- $('installGate').textContent=!ready?'Für diesen Stand fehlt ein aufgelöster, aktueller Prüfbericht. In Schritt 4 erneut vergleichen.':direct?'Dateiplan bereit. Die vorbereitete Spielkopie wird vor dem Kopieren gesichert.':'Mod-ZIP kann gebaut werden. Für Direktinstallation zusätzlich Windows und die bestätigten Voraussetzungen aus Schritt 1 nötig.';
- $('installGate').className='notice'+(ready?' good':'');}
+function updateGates(){const ready=!!plan&&!dirty&&plan.counts.conflicts===0;const installed=!!app?.state.installed_game;$('toInstallBtn').disabled=!ready;$('buildBtn').disabled=!ready;const direct=ready&&app?.platform==='nt'&&$('cleanTarget').checked&&$('prepared').checked;
+ $('installBtn').disabled=!direct||installed;$('launchBtn').disabled=!installed;
+ $('installGate').textContent=installed?(app.state.readiness?.can_launch?'Moddateien installiert und geprüft. Jetzt den Spielstart testen oder bei Bedarf die Sicherung wiederherstellen.':'Moddateien installiert. Vor dem Spielstart die Installation erneut prüfen.'):!ready?'Für diesen Stand fehlt ein aufgelöster, aktueller Prüfbericht. In Schritt 4 erneut vergleichen.':direct?'Dateiplan bereit. Die vorbereitete Spielkopie wird vor dem Kopieren gesichert.':'Mod-ZIP kann gebaut werden. Für Direktinstallation zusätzlich Windows und die bestätigten Voraussetzungen aus Schritt 1 nötig.';
+ $('installGate').className='notice'+((installed?!!app.state.readiness?.can_launch:ready)?' good':'');
+ if(installed){const summary=installedSummary();$('autoHeadline').textContent=summary.headline;$('autoMessage').textContent=summary.message;}}
 async function busyJob(start,title){
  $('progress').hidden=true;$('progress').classList.remove('done');$('hideProgressBtn').hidden=true;$('progressTitle').textContent=title;$('progressLog').textContent='';document.body.classList.add('busy');
  try{

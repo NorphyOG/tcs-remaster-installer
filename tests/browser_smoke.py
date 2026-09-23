@@ -115,6 +115,10 @@ def main():
     try:
         with sync_playwright() as pw:
             executable=shutil.which('chromium') or shutil.which('google-chrome')
+            if not executable and sys.platform=='win32':
+                candidates=(Path(os.environ.get('PROGRAMFILES',r'C:\Program Files'))/'Google/Chrome/Application/chrome.exe',
+                            Path(os.environ.get('PROGRAMFILES(X86)',r'C:\Program Files (x86)'))/'Microsoft/Edge/Application/msedge.exe')
+                executable=next((str(path) for path in candidates if path.is_file()),None)
             browser=pw.chromium.launch(headless=True,executable_path=executable,args=['--no-sandbox'])
             page=browser.new_page(viewport={'width':1440,'height':1120},device_scale_factor=1)
             page.on('pageerror',lambda e:errors.append(str(e)))
@@ -395,6 +399,10 @@ def main():
             assert plan['counts']['conflicts']==0
             with patch.object(Engine,'_running',return_value=False):server.app.engine.install(plan,lambda _:None)
             page.evaluate('loadState(false)')
+            page.wait_for_function("document.querySelector('#autoHeadline').textContent.includes('Mods installiert')")
+            assert page.locator('#installBtn').is_disabled()
+            assert 'Moddateien installiert' in page.locator('#installGate').inner_text()
+            checks.append('Completed installation replaces install prompt and disables repeat installation')
             page.click('#verifyBtn')
             page.wait_for_function("document.querySelector('#readinessStatus').textContent.includes('installierte Dateien geprüft')",timeout=15000)
             assert not page.locator('#playCheckedBtn').is_disabled()
@@ -407,6 +415,11 @@ def main():
             assert (f.game/'CHARS/Boba/Body.gsc').read_bytes()==b'changed after installation'
             assert server.app.engine.state.get('readiness') is None
             checks.append('Changed installed file blocks final verification without overwriting it')
+            page.evaluate('loadState(false)')
+            page.evaluate('refreshAuto()')
+            assert 'erneut prüfen' in page.locator('#autoHeadline').inner_text()
+            assert 'geprüft' not in page.locator('#autoMessage').inner_text()
+            checks.append('Invalidated file verification is not shown as a verified installation')
             page.set_viewport_size({'width':390,'height':844})
             assert page.evaluate('document.documentElement.scrollWidth<=window.innerWidth+2')
             checks.append('Stage cards and completion controls remain responsive at 390px')

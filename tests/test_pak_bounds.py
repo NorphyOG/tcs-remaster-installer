@@ -172,7 +172,9 @@ class PakBoundsTests(unittest.TestCase):
         with self.assertRaises(Cancelled): inspect_pak(self.archive, log)
     def test_symlink_target_refused(self):
         self.write(make_pak({'x/file.txt': b'data'})); index = inspect_pak(self.archive)
-        out = self.f.root/'out'; out.mkdir(); (out/'x').symlink_to(self.f.game, target_is_directory=True)
+        out = self.f.root/'out'; out.mkdir()
+        try: (out/'x').symlink_to(self.f.game, target_is_directory=True)
+        except OSError: self.skipTest('OS does not allow symlink creation')
         with self.assertRaises(BuildError): extract_raw(index, out)
     def test_bounded_patch_is_narrow_and_preserves_source(self):
         source = self.f.root/'script.bms'; source.write_text(SCRIPT); before = digest(source)

@@ -7,9 +7,9 @@ async function saveAuto(){await api('settings',settings());return api('automatio
 function renderAuto(status,fill=false){
  const a=status.automation,n=status.nexus;
  if(typeof renderInventory==='function')renderInventory(status.inventory||[]);
- const planReady=plan&&!dirty&&!plan.counts.conflicts;
- $('autoMessage').textContent=planReady?'Bekannte Dateikollisionen automatisch geregelt. Installation und Spieltest stehen noch aus.':status.message;
- $('autoHeadline').textContent=planReady?'Dateiplan bereit · als Nächstes installieren':a.armed?'Automatik wartet oder installiert nach Prüfung.':app?.state.installed_game?'Moddateien installiert · jetzt im Spiel testen.':'Spielvorbereitung und Downloadübergabe';
+ const planReady=plan&&!dirty&&!plan.counts.conflicts,installed=!!app?.state.installed_game;
+ $('autoMessage').textContent=installed?installedSummary().message:planReady?'Bekannte Dateikollisionen automatisch geregelt. Installation und Spieltest stehen noch aus.':status.message;
+ $('autoHeadline').textContent=installed?installedSummary().headline:planReady?'Dateiplan bereit · als Nächstes installieren':a.armed?'Automatik wartet oder installiert nach Prüfung.':'Spielvorbereitung und Downloadübergabe';
  $('autoBadge').textContent=a.armed?'Automatik aktiv':'Kontrollierter Modus';
  $('autoBadge').className='pill'+(a.armed?' good':'');
  $('nexusStatus').textContent=n.connected?'Verbunden: '+n.name+' · '+(n.premium?'Premium-Direktdownloads möglich':'Kostenlos · Browserbestätigung nötig'):'Nicht verbunden · Downloadordner funktioniert auch ohne API-Schlüssel.';

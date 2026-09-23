@@ -18,6 +18,6 @@ Die [lokale Windows-Prüfung vom 23.09.2026](VERIFICATION_2026-09-23.md) dokumen
 
 Browserprüfungen benutzen echte Chromium-Darstellung und lokalen Python-HTTP-Dienst. In eingeschränkten Umgebungen ist ein dokumentierter Test-Transportadapter nötig; dieser testet dann ausdrücklich nicht die reale Browsernavigation/-Sitzungsübergabe. Ein Edge-/Chrome-Appfenster unter Windows und Spielstart sind separat auf einem echten Rechner zu testen.
 
-`TEST_REPORT.json` enthält die ursprüngliche 0.4.0-Abnahme. Die aktuelle Nachprüfung der Automatik steht in `VERIFICATION_2026-09-23.md`, `BROWSER_TEST_REPORT.json` und `UNIT_TEST_LOG.txt`. Screenshots sind als künstliche Testinstallation gekennzeichnet. CI ist für Linux und Windows vorbereitet; eine lokale Browserprobe ersetzt keinen echten Spieltest.
+`TEST_REPORT.json` enthält die ursprüngliche 0.4.0-Abnahme. Die aktuelle Nachprüfung der Automatik und der lokalen Dateiinstallation steht in `VERIFICATION_2026-09-23.md`, `BROWSER_TEST_REPORT.json` und `UNIT_TEST_LOG.txt`. Die aktuelle Suite umfasst 363 Python-Tests (2 übersprungen) und 48 Browser-Prüfungen mit lokalem Test-Transportadapter. Browser-Screenshots zeigen künstliche Testdaten; eine lokale Browserprobe und bestandene Dateihashes ersetzen keinen echten Spieltest. CI ist für Linux und Windows vorbereitet.
 
 Freigabe als spielgetestetes Paket erfordert einen realen Durchlauf der [Playtest-Checkliste](PLAYTEST_CHECKLIST.md). Kein Wert `game_tested=true` wird aus bestandenen Unit-Tests abgeleitet.

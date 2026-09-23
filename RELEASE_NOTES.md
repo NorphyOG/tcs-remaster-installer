@@ -1,5 +1,12 @@
 # 0.4.0 – Stufenanzeige, Patchimport und geprüfter Start
 
+## Nachbesserung: Windows-Installation und Abschlussanzeige
+
+- Startfehler der Windows-Administratorabfrage liefern jetzt eine unterscheidbare Diagnose. Es gibt keinen direkten Schreib-Fallback ohne UAC.
+- Der lokale Installationslauf vom 24.09.2026 schrieb 2.110 Moddateien mit Sicherungsjournal und prüfte sie anschließend per Dateihash. Der Spielstart und die tatsächliche Modfunktion stehen noch aus.
+- Nach erfolgreicher Installation zeigt der Assistent den Prüfstatus und sperrt eine erneute Direktinstallation.
+- Regressionen: 363 Python-Tests (2 wegen fehlender Symlink-Rechte übersprungen) und 48 Browser-Prüfungen mit lokalem Test-Transportadapter.
+
 ## Nachbesserung: automatische Dateiauflösung und Navigation
 
 - Bekannte CHARS/STUFF-Modelle und Grafiken folgen der dokumentierten Autoren-Reihenfolge; zehn geprüfte Text-/Skriptdateien sind an vollständige SHA-256-Werte gebunden.
@@ -7,7 +14,7 @@
 - Im schmalen Fenster bleiben alle sechs Schritte oben sichtbar. Der aktuelle Arbeitsschritt steht vor der langen Detailübersicht.
 - Synthetischer Browserlauf auf Windows: 46 Prüfungen mit Test-Transportadapter; reale Spielkompatibilität und Browser-Sitzungsübergabe stehen aus.
 - Windows-Entpackordner erben nun lesbare Workspace-Rechte für 7-Zip. Nicht mehr lesbare Import-Caches werden aus unveränderten, SHA-256-geprüften Archiven automatisch wiederhergestellt.
-- Frischer lokaler Vergleich mit sechs importierten Modarchiven: 2.110 Zieldateien, 220 automatische Überlagerungen, 0 offene Konflikte. Keine Installation und kein Spieltest.
+- Frischer lokaler Vergleich mit sechs importierten Modarchiven: 2.110 Zieldateien, 220 automatische Überlagerungen, 0 offene Konflikte. Der spätere Installationslauf steht im Nachtrag oben.
 
 - Windows-Pfadtrenner aus 7-Zip normalisiert; jede Datei mit Einzelgröße geprüft. Keine Sicherheitsprüfung entfernt.
 - Sieben persistente Fortschrittsstufen statt scheinbarer Gesamt-100-Prozent-Anzeige.
@@ -19,7 +26,7 @@
 - GitHub-README, Anleitungen, Sicherheits-/Beitragsdateien, Issue-Vorlagen und CI vorbereitet. Nichts veröffentlicht.
 - Automatik behält sichere Stops, Prüfungen, Wiederherstellung und bereits geprüfte PAK-/DAT-Zwischenstände.
 
-Die sechs lokal importierten Modarchive wurden für den Dateivergleich gelesen. Aktuelle Nexus-API-Downloads, Installation, Windows-Appfenster und Spielstart wurden nicht durchgeführt. Synthetische Prüfungen und UI-Ergebnisse siehe docs/TEST_REPORT.json und docs/VERIFICATION_2026-09-23.md. Kein fertiges Komplett-Remake.
+Die sechs lokal importierten Modarchive wurden für Vergleich und Installation gelesen. Aktuelle Nexus-API-Downloads, das separate Windows-Appfenster und der Spielstart wurden nicht geprüft. Synthetische Prüfungen und lokale Ergebnisse siehe docs/TEST_REPORT.json und docs/VERIFICATION_2026-09-23.md. Kein fertiges Komplett-Remake.
 
 ---
 

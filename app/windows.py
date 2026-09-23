@@ -14,13 +14,33 @@ from safety import BuildError, no_links, digest
 from nettools import require_windows
 
 
-def powershell(script: str, env: dict | None=None, timeout=120):
+def _powershell_process(script: str, env: dict | None=None, timeout=120):
     require_windows()
     encoded=base64.b64encode(script.encode('utf-16le')).decode('ascii')
-    run=subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-EncodedCommand',encoded],
-                       env={**os.environ,**(env or {})},capture_output=True,timeout=timeout,shell=False,creationflags=0x08000000)
+    return subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-EncodedCommand',encoded],
+                          env={**os.environ,**(env or {})},capture_output=True,timeout=timeout,shell=False,creationflags=0x08000000)
+
+
+def powershell(script: str, env: dict | None=None, timeout=120):
+    run=_powershell_process(script,env,timeout)
     if run.returncode: raise BuildError('Windows hat diesen Schritt abgelehnt oder eine Bestätigung wurde abgebrochen.')
     return run.stdout.decode('utf-8-sig',errors='replace').strip()
+
+
+def elevation_failure(run) -> BuildError:
+    """Report only a bounded status marker, never arbitrary helper output."""
+    marker=run.stdout.decode('utf-8-sig',errors='replace').strip()
+    if marker=='launch-win32:1223':
+        return BuildError('Windows hat die Administratorabfrage abgebrochen oder nicht angezeigt. Keine Moddatei wurde installiert.')
+    if marker.startswith('launch-win32:') and marker[13:].isdigit():
+        code=marker[13:]
+        return BuildError('Windows konnte die Administratorabfrage nicht öffnen (Fehler '+code+'). '
+                          'Assistent in der normalen Windows-Sitzung über STARTEN.cmd öffnen und erneut versuchen.')
+    if marker.startswith('worker-exit:') and marker[12:].isdigit():
+        return BuildError('Der Windows-Schreibprozess wurde mit Exitcode '+marker[12:]
+                          +' beendet. Vor erneutem Installieren Spielordner und Sicherungsjournal prüfen; Diagnose speichern.')
+    return BuildError('Windows konnte den Schreibprozess nicht starten (Exitcode '+str(run.returncode)+'). '
+                      'Assistent in der normalen Windows-Sitzung über STARTEN.cmd öffnen und Diagnose speichern.')
 
 
 def protocol_status():
@@ -147,10 +167,25 @@ $psi.FileName=$env:TCS_ELEVATE_PYTHON
 $psi.Arguments=$env:TCS_ELEVATE_ARGS
 $psi.WorkingDirectory=$env:TCS_ELEVATE_BASE
 $psi.Verb='runas'; $psi.UseShellExecute=$true
-try { $p=[System.Diagnostics.Process]::Start($psi); $p.WaitForExit(); exit $p.ExitCode } catch { exit 1 }
+try {
+  $p=[System.Diagnostics.Process]::Start($psi)
+  if ($null -eq $p) { [Console]::WriteLine('launch-null'); exit 1 }
+  $p.WaitForExit()
+  if ($p.ExitCode -ne 0) { [Console]::WriteLine('worker-exit:'+$p.ExitCode); exit 1 }
+} catch {
+  $cause=$_.Exception
+  while ($null -ne $cause.InnerException) { $cause=$cause.InnerException }
+  if ($cause -is [System.ComponentModel.Win32Exception]) {
+    [Console]::WriteLine('launch-win32:'+$cause.NativeErrorCode)
+  } else {
+    [Console]::WriteLine('launch-exception:'+$cause.GetType().Name)
+  }
+  exit 1
+}
 '''
     try:
-        powershell(script,{'TCS_ELEVATE_PYTHON':sys.executable,'TCS_ELEVATE_ARGS':args,'TCS_ELEVATE_BASE':str(base)},timeout=7200)
+        run=_powershell_process(script,{'TCS_ELEVATE_PYTHON':sys.executable,'TCS_ELEVATE_ARGS':args,'TCS_ELEVATE_BASE':str(base)},timeout=7200)
+        if run.returncode: raise elevation_failure(run)
         if not result.is_file(): raise BuildError('Windows-Schreibauftrag hat kein Ergebnis zurückgeliefert.')
         output=json.loads(result.read_text(encoding='utf-8'))
         if output.get('error'): raise BuildError(output['error'])

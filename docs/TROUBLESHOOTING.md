@@ -9,6 +9,7 @@
 | Zweite Archivfassung vorhanden | Mehrere unterschiedliche Downloads für ein Modul | Bewusst eine Variante wählen; keine automatische Wahl „neueste Datei gewinnt“. |
 | Gesamtmenge noch offen | Tool liefert keinen verlässlichen Gesamtzähler | Protokoll prüfen, warten. Kein Stillstand allein wegen fehlender Prozentzahl. |
 | START_NOT_READY | Journal, Dateien, EXE oder Spielstruktur passen nicht | Nicht starten; Abschlussprüfung wiederholen. Änderungen sichern, danach kontrolliert zurücknehmen. |
+| Keine Administratorabfrage beim Installieren | Windows konnte den erhöhten Schreibprozess nicht starten | Assistent über `STARTEN.cmd` in der normalen Windows-Sitzung öffnen. Angezeigten Fehlercode notieren und Diagnose speichern; nicht ohne Sicherungsjournal direkt in den Spielordner kopieren. |
 | Kein eigenes Fenster | Kein unterstütztes lokales Edge/Chrome gefunden oder Start fehlgeschlagen | `IM_BROWSER.cmd` verwenden; kein Browser-Sicherheitsfeature abschalten. |
 | Download bleibt unbekannt | Dateiname/Metadaten nicht eindeutig oder noch unvollständig | Vollständig herunterladen; Karte „Archiv hinzufügen“ beziehungsweise Zuordnung nutzen. |
 | Werkzeug-Hash falsch | Datei nicht wie erwartet | Offizielle Quelle/Version prüfen; keine fremde DLL/EXE einsetzen. |
