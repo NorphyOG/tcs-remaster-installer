@@ -1,5 +1,6 @@
 """Conservative three-way TEXT merge. This does not merge GSC/model binaries.
-A conflict-free text result is a proposal, not a proof of game-level correctness.
+A conflict-free text result can be applied when the baseline is confirmed, but
+it does not prove game-level correctness.
 """
 from __future__ import annotations
 import difflib
@@ -67,4 +68,4 @@ def merge3(base:bytes,left:bytes,right:bytes,path:str) -> MergeResult:
     if path.lower().endswith('.json'):
         try: json.loads(text)
         except (ValueError,TypeError): return MergeResult(False,None,'Zusammenführung ergäbe ungültiges JSON.')
-    return MergeResult(True,text.encode(enc),'Nicht überlappende Textänderungen vereint; Vorschlag muss geprüft werden.')
+    return MergeResult(True,text.encode(enc),'Nicht überlappende Textänderungen vereint; Spiellogik ungeprüft.')

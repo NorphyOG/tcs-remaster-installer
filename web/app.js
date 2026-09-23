@@ -11,11 +11,34 @@ async function api(path,data,method='POST'){
  const response=await fetch('/api/'+path,{method,headers:{'X-TCS-Token':token||'','Content-Type':'application/json'},...(method==='GET'?{}:{body:JSON.stringify(data||{})})});
  const result=await response.json();if(!response.ok)throw new Error(result.error||response.statusText);return result;
 }
-function step(n){if($('progress').classList.contains('done'))$('progress').hidden=true;document.querySelectorAll('.step').forEach(e=>e.classList.toggle('active',e.id==='step'+n));document.querySelectorAll('.nav').forEach(e=>e.classList.toggle('active',e.dataset.step===String(n)));window.scrollTo({top:0,behavior:'instant'});if(n===5)updateGates();}
-function markDirty(resetReview=false){if(resetReview){$('acceptText').checked=false;$('acceptAuthors').checked=false;for(const k of Object.keys(decisions))delete decisions[k];}dirty=true;$('planFreshness').textContent='Auswahl geändert. Bitte erneut vergleichen.';updateGates();}
+const stageToStep={prepare:1,downloads:2,mapping:3,compare:4,install:5,verify:5,launch:5};
+const stepNames=['','Spiel auswählen','Downloads','Archive zuordnen','Zusammenführen','Installieren','Weitergeben'];
+function nextStepNumber(){
+ if(plan&&!dirty&&!plan.counts.conflicts)return 5;
+ const pending=app?.steps?.stages?.find(stage=>stage.status!=='done');
+ return pending?stageToStep[pending.id]||1:5;
+}
+function updateNextStep(){
+ const n=nextStepNumber(),button=$('resumeStepBtn');
+ button.dataset.step=String(n);
+ button.textContent=`Zu Schritt ${n}: ${stepNames[n]} →`;
+}
+function step(n){
+ if($('progress').classList.contains('done'))$('progress').hidden=true;
+ const target=$('step'+n);
+ document.querySelectorAll('.step').forEach(e=>e.classList.toggle('active',e===target));
+ document.querySelectorAll('.nav').forEach(e=>{
+  const active=e.dataset.step===String(n);
+  e.classList.toggle('active',active);
+  if(active)e.setAttribute('aria-current','step');else e.removeAttribute('aria-current');
+ });
+ target.scrollIntoView({block:'start',behavior:'auto'});
+ if(n===5)updateGates();
+}
+function markDirty(resetReview=false){if(resetReview){for(const k of Object.keys(decisions))delete decisions[k];}dirty=true;$('planFreshness').textContent='Auswahl geändert. Bitte erneut vergleichen.';updateGates();}
 function sourceById(id){return app?.state.sources.find(s=>s.id===id);}
 function suggested(roots,mode){if(roots.length===1)return [...roots];const classic=roots.filter(r=>r.toLowerCase().includes('classic'));let common=roots.filter(r=>!/(optional|film.?accurate|e3.?2019|vader|icon|classic)/i.test(r));if(common.length){let d=Math.min(...common.map(r=>r?r.split('/').length:0));common=common.filter(r=>(r?r.split('/').length:0)===d);}return mode==='classic'?[...common,...classic.slice(0,1)]:common.length===1?common:[];}
-function settings(){return {game:$('gamePath').value.trim(),baseline:$('baselinePath').value.trim(),selections:app.state.selections,decisions:{...decisions},options:{clean_target_confirmed:$('cleanTarget').checked,prepared_confirmed:$('prepared').checked,baseline_confirmed:$('baselineConfirmed').checked,accept_text_merges:$('acceptText').checked,accept_author_replacements:$('acceptAuthors').checked,graphics:$('graphics').checked}};}
+function settings(){return {game:$('gamePath').value.trim(),baseline:$('baselinePath').value.trim(),selections:app.state.selections,decisions:{},options:{clean_target_confirmed:$('cleanTarget').checked,prepared_confirmed:$('prepared').checked,baseline_confirmed:$('baselineConfirmed').checked,graphics:$('graphics').checked}};}
 async function loadState(fill=false,background=false){
  const next=await api('state',null,'GET');
  // Background refresh must not erase a user's unsaved confirmations or choices.
@@ -28,9 +51,9 @@ async function loadState(fill=false,background=false){
  app=next;
  if(typeof recordObservedState==='function')recordObservedState(app);
  $('runtimeBadge').textContent='● Lokal verbunden · Python '+app.python_version;
- if(fill&&!background){$('gamePath').value=app.state.game||'';$('baselinePath').value=app.state.baseline||'';const o=app.state.options||{};for(const [id,key]of [['cleanTarget','clean_target_confirmed'],['prepared','prepared_confirmed'],['baselineConfirmed','baseline_confirmed'],['acceptText','accept_text_merges'],['acceptAuthors','accept_author_replacements'],['graphics','graphics']])$(id).checked=!!o[key];Object.assign(decisions,app.state.decisions||{});}
+ if(fill&&!background){$('gamePath').value=app.state.game||'';$('baselinePath').value=app.state.baseline||'';const o=app.state.options||{};for(const [id,key]of [['cleanTarget','clean_target_confirmed'],['prepared','prepared_confirmed'],['baselineConfirmed','baseline_confirmed'],['graphics','graphics']])$(id).checked=!!o[key];}
  if(!background||before!==JSON.stringify([app.state.sources,app.state.selections])){renderDownloads();renderModules();}
- updateGates();if(typeof renderJourney==='function')renderJourney(app.steps);if(typeof renderReadiness==='function')renderReadiness();if(typeof renderJob==='function')renderJob(app.job);
+ updateGates();updateNextStep();if(typeof renderJourney==='function')renderJourney(app.steps);if(typeof renderReadiness==='function')renderReadiness();if(typeof renderJob==='function')renderJob(app.job);
 }
 function renderDownloads(){
  $('downloadCards').innerHTML=app.profile.modules.map((m,i)=>{const s=app.state.selections[m.id];const ready=s?.source_id;const selected=s?.enabled??m.default_enabled;return `<article class="panel download-card ${selected?'':'optional-muted'}"><div class="row spaced"><span class="cardnum">0${i+1}</span><span class="pill ${ready?'good':''}">${ready?'Archiv hinzugefügt':m.default_enabled===false?'Optional · standardmäßig aus':'Download beim Autor'}</span></div><h2>${esc(m.name)}</h2><small>${esc(m.author)}</small><span class="filename">${esc(m.file)}</span><p class="muted">${esc(m.description)}</p><div class="destination"><strong>Ziel:</strong> ${esc(m.destination)}</div><div class="cardactions"><button class="primary small" data-open-module="${m.id}">Richtige Datei öffnen ↗</button><button class="small" data-upload-module="${m.id}">Archiv hinzufügen</button><button class="small" data-nexus-module="${m.id}">Über Nexus laden</button></div></article>`;}).join('');
@@ -46,14 +69,15 @@ function renderModules(){
 }
 function renderPlan(){
  if(!plan)return;const c=plan.counts;
- $('metrics').innerHTML=[['Dateien',c.files],['Offene Konflikte',c.conflicts],['Textvorschläge',c.text_proposals],['Autoren-Varianten',c.author_proposals]].map(([label,value])=>`<div class="metric"><strong>${value.toLocaleString('de-DE')}</strong><span>${label}</span></div>`).join('');
- $('reviewOptions').hidden=!(c.text_proposals||c.author_proposals);$('downloadReportBtn').disabled=false;$('conflictTools').hidden=!c.conflicts;
- $('planFreshness').textContent=dirty?'Auswahl geändert. Erneut vergleichen.':c.conflicts?'Konflikte brauchen eine Entscheidung.':'Dateiplan aufgelöst · noch kein Spieltest';
+ $('metrics').innerHTML=[['Dateien',c.files],['Automatische Überlagerungen',c.recipe_overlays||0],['Automatische Text-Merges',c.text_merges||0],['Offene Konflikte',c.conflicts]].map(([label,value])=>`<div class="metric"><strong>${value.toLocaleString('de-DE')}</strong><span>${label}</span></div>`).join('');
+ $('downloadReportBtn').disabled=false;$('conflictTools').hidden=!c.conflicts;
+ $('planFreshness').textContent=dirty?'Auswahl geändert. Erneut vergleichen.':c.conflicts?'Unbekannte Kollisionen bleiben gesperrt.':'Bekannte Überschneidungen automatisch geregelt · Spieltest offen';
+ if(!dirty&&!c.conflicts){$('autoHeadline').textContent='Dateiplan bereit · als Nächstes installieren';$('autoMessage').textContent='Bekannte Dateikollisionen automatisch geregelt. Installation und Spieltest stehen noch aus.';}
  renderConflicts();updateGates();
 }
 function renderConflicts(){
  if(!plan)return;const filter=$('conflictFilter').value.toLowerCase();const items=plan.conflicts.filter(r=>r.path.toLowerCase().includes(filter));const pages=Math.max(1,Math.ceil(items.length/30));conflictPage=Math.min(conflictPage,pages-1);const page=items.slice(conflictPage*30,(conflictPage+1)*30);
- $('conflicts').innerHTML=page.length?page.map(r=>`<article class="conflict"><span class="path">${esc(r.path)}</span><span class="pill ${r.author_replacement_proposal||r.merge_proposal?'warn':'bad'}">${r.merge_proposal?'Textvorschlag vorhanden':r.author_replacement_proposal?'Autoren-Ersetzung vorgeschlagen':'Nicht automatisch zusammenführbar'}</span><p class="desc" style="margin:10px 0 0">${esc(r.reason)}</p><div class="row"><button class="small" data-preview="${esc(r.key)}">Vergleich ansehen</button><select data-provider="${esc(r.key)}" aria-label="Variante für ${esc(r.path)}"><option value="">Variante bewusst wählen …</option>${[...new Set(r.versions.map(v=>v.module))].map(m=>`<option value="${esc(m)}">${esc(app.profile.modules.find(x=>x.id===m)?.name||m)}</option>`).join('')}</select><button class="small" data-use-provider="${esc(r.key)}">Variante übernehmen</button><button class="small" data-patch="${esc(r.key)}">Merge-/Patchdatei wählen</button></div>${decisions[r.key]?'<small>Entscheidung vorgemerkt. Erneut vergleichen, um sie zu prüfen.</small>':''}</article>`).join(''):`<div class="notice good">${plan.counts.conflicts?'Keine Treffer für diesen Filter.':'Keine ungelösten Dateikonflikte. Der Build kann erstellt werden. Das ist keine In-Game-Kompatibilitätsfreigabe.'}</div>`;
+ $('conflicts').innerHTML=page.length?page.map(r=>`<article class="conflict"><span class="path">${esc(r.path)}</span><span class="pill bad">Automatik angehalten</span><p class="desc" style="margin:10px 0 0">${esc(r.reason)}</p><div class="row"><button class="small" data-preview="${esc(r.key)}">Unterschied ansehen</button></div></article>`).join(''):`<div class="notice good">${plan.counts.conflicts?'Keine Treffer für diesen Filter.':'Keine ungelösten Dateikonflikte. Der Build kann erstellt werden. Das ist keine In-Game-Kompatibilitätsfreigabe.'}</div>`;
  $('conflictPaging').innerHTML=items.length>30?`<button class="small" id="prevPage" ${conflictPage===0?'disabled':''}>←</button><small>Seite ${conflictPage+1} / ${pages} · ${items.length} Konflikte</small><button class="small" id="nextPage" ${conflictPage>=pages-1?'disabled':''}>→</button>`:'';
 }
 function updateGates(){const ready=!!plan&&!dirty&&plan.counts.conflicts===0;$('toInstallBtn').disabled=!ready;$('buildBtn').disabled=!ready;const direct=ready&&app?.platform==='nt'&&$('cleanTarget').checked&&$('prepared').checked;
@@ -100,8 +124,6 @@ async function handleClick(event){
  if(b.dataset.uploadModule){pendingModule=b.dataset.uploadModule;$('archiveInput').click();return;}
  if(b.dataset.suggest){const m=app.profile.modules.find(x=>x.id===b.dataset.suggest),sel=app.state.selections[m.id],src=sourceById(sel.source_id);if(src){sel.roots=suggested(src.roots,m.root_mode);sel.confirmed=false;renderModules();markDirty(true);}return;}
  if(b.dataset.preview){await preview(b.dataset.preview);return;}
- if(b.dataset.useProvider){const key=b.dataset.useProvider;const select=[...document.querySelectorAll('[data-provider]')].find(x=>x.dataset.provider===key);if(!select?.value)throw new Error('Zuerst die gewünschte Variante auswählen.');if(confirm('Diese komplette Datei wird gewählt. Änderungen der anderen Varianten an derselben Datei bleiben NICHT erhalten. Das ist eine bewusste Ersetzung, kein Merge. Fortfahren?')){decisions[key]={type:'provider',module:select.value};markDirty();renderConflicts();}return;}
- if(b.dataset.patch){const key=b.dataset.patch;const p=app.platform==='nt'?(await api('picker',{kind:'file'})).path:prompt('Vollständiger Pfad zur lokal zusammengeführten Patchdatei:');if(p){decisions[key]={type:'patch',path:p};markDirty();renderConflicts();}return;}
  switch(b.id){
  case 'chooseGameBtn':await selectFolder('gamePath');if($('gamePath').value)await checkGame();break;
  case 'chooseBaselineBtn':await selectFolder('baselinePath');break;
@@ -110,7 +132,7 @@ async function handleClick(event){
  case 'addArchivesBtn':pendingModule=null;$('archiveInput').click();break;
  case 'addFolderBtn':{const p=app.platform==='nt'?(await api('picker',{kind:'folder'})).path:prompt('Vollständiger Pfad zum entpackten Modordner:');if(p){await busyJob(()=>api('import',{path:p}),'Prüfe Modordner');await loadState();markDirty();}break;}
  case 'saveSelectionsBtn':await api('settings',settings());step(4);break;
- case 'planBtn':await busyJob(()=>api('plan',settings()),'Vergleiche Dateien und Zusammenführungen');plan=await api('plan',null,'GET');dirty=false;conflictPage=0;renderPlan();break;
+ case 'planBtn':await busyJob(()=>api('plan',settings()),'Vergleiche Dateien und Zusammenführungen');plan=await api('plan',null,'GET');dirty=false;conflictPage=0;renderPlan();await loadState(false);break;
  case 'downloadReportBtn':await download('report','TCS-Pruefbericht.json');break;
  case 'installBtn':if(!confirm('Die aufgelösten Dateien jetzt in die gewählte vorbereitete Spielkopie installieren? Betroffene Dateien werden gesichert. Spiel vorher schließen.'))return;{const r=await busyJob(()=>api('install',{plan_id:plan.id,confirmation:'INSTALL'}),'Sichere und installiere');await loadState();showResult(r);}break;
  case 'buildBtn':{const r=await busyJob(()=>api('build',{plan_id:plan.id}),'Baue lokale Mod-ZIP');await loadState();showResult(r);}break;
@@ -129,7 +151,7 @@ async function handleClick(event){
  }
 }
 function showResult(r){const installed=(r.status||'').startsWith('INSTALLED');const restored=r.status==='RESTORED';$('installResult').innerHTML=`<div class="panel" style="border-color:#3d7f68"><span class="success-icon">✓</span><h2>${restored?'Gesicherter Zustand wiederhergestellt':installed?'Dateien installiert':'Lokale Mod-ZIP erstellt'}</h2><span class="path">${esc(r.folder)}</span><p class="muted">${restored?'Betroffene Originaldateien wiederhergestellt.':installed?'Installation abgeschlossen. Ein erfolgreicher Spielstart und die Mod-Kompatibilität müssen jetzt im Spiel geprüft werden.':'Im geöffneten Buildordner die TCS-Remaster-Local.zip in Reloaded-II importieren. Grafikdateien aus graphics-for-game-folder separat ins Spielverzeichnis legen, falls ausgewählt.'}</p><button id="${installed||restored?'openGameBtn':'openBuildBtn'}">Ergebnisordner öffnen</button>${!restored?'<div class="notice">Dieser lokale Build enthält fremde Moddateien. Nicht öffentlich hochladen. Zum Weitergeben Schritt 6 benutzen.</div>':''}</div>`;}
-function handleChange(event){const e=event.target;if(e.dataset.source){let sel=app.state.selections[e.dataset.source];const source=sourceById(e.value),m=app.profile.modules.find(x=>x.id===e.dataset.source);sel.source_id=e.value;sel.roots=source?suggested(source.roots,m.root_mode):[];sel.confirmed=false;renderModules();markDirty(true);return;}if(e.dataset.rootModule){const sel=app.state.selections[e.dataset.rootModule];sel.roots=e.checked?[...new Set([...sel.roots,e.dataset.root])]:sel.roots.filter(r=>r!==e.dataset.root);sel.confirmed=false;renderModules();markDirty(true);return;}if(e.dataset.confirm){app.state.selections[e.dataset.confirm].confirmed=e.checked;markDirty();return;}if(e.dataset.enabled){app.state.selections[e.dataset.enabled].enabled=e.checked;markDirty();return;}if(['gamePath','baselinePath','cleanTarget','prepared','baselineConfirmed','acceptText','acceptAuthors','graphics'].includes(e.id))markDirty(['gamePath','baselinePath','baselineConfirmed'].includes(e.id));}
+function handleChange(event){const e=event.target;if(e.dataset.source){let sel=app.state.selections[e.dataset.source];const source=sourceById(e.value),m=app.profile.modules.find(x=>x.id===e.dataset.source);sel.source_id=e.value;sel.roots=source?suggested(source.roots,m.root_mode):[];sel.confirmed=false;renderModules();markDirty(true);return;}if(e.dataset.rootModule){const sel=app.state.selections[e.dataset.rootModule];sel.roots=e.checked?[...new Set([...sel.roots,e.dataset.root])]:sel.roots.filter(r=>r!==e.dataset.root);sel.confirmed=false;renderModules();markDirty(true);return;}if(e.dataset.confirm){app.state.selections[e.dataset.confirm].confirmed=e.checked;markDirty();return;}if(e.dataset.enabled){app.state.selections[e.dataset.enabled].enabled=e.checked;markDirty();return;}if(['gamePath','baselinePath','cleanTarget','prepared','baselineConfirmed','graphics'].includes(e.id))markDirty(['gamePath','baselinePath','baselineConfirmed'].includes(e.id));}
 document.addEventListener('click',e=>handleClick(e).catch(error));document.addEventListener('change',handleChange);$('archiveInput').addEventListener('change',e=>uploadFiles([...e.target.files]).catch(error));$('conflictFilter').addEventListener('input',()=>{conflictPage=0;renderConflicts();});
 for(const event of ['dragenter','dragover'])$('dropzone').addEventListener(event,e=>{e.preventDefault();$('dropzone').classList.add('drag');});for(const event of ['dragleave','drop'])$('dropzone').addEventListener(event,e=>{e.preventDefault();$('dropzone').classList.remove('drag');});$('dropzone').addEventListener('drop',e=>{pendingModule=null;uploadFiles([...e.dataTransfer.files]).catch(error);});
-(async()=>{try{if(!token)throw new Error('Diese Seite über STARTEN.cmd öffnen. Eine normale HTML-Datei kann nicht selbstständig beliebige Dateien auf deinem PC verändern.');await loadState(true);if(app.job.running){await busyJob(async()=>{},'Laufenden Arbeitsschritt wieder verbinden');await loadState();}}catch(e){$('connectError').textContent=e.message+' Der lokale Helfer muss geöffnet bleiben.';$('connectError').hidden=false;}})();
+(async()=>{try{if(!token)throw new Error('Diese Seite über STARTEN.cmd öffnen. Eine normale HTML-Datei kann nicht selbstständig beliebige Dateien auf deinem PC verändern.');await loadState(true);step(nextStepNumber());if(app.job.running){await busyJob(async()=>{},'Laufenden Arbeitsschritt wieder verbinden');await loadState();}}catch(e){$('connectError').textContent=e.message+' Der lokale Helfer muss geöffnet bleiben.';$('connectError').hidden=false;}})();

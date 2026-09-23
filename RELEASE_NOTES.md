@@ -1,5 +1,12 @@
 # 0.4.0 – Stufenanzeige, Patchimport und geprüfter Start
 
+## Nachbesserung: automatische Dateiauflösung und Navigation
+
+- Bekannte CHARS/STUFF-Modelle und Grafiken folgen der dokumentierten Autoren-Reihenfolge; zehn geprüfte Text-/Skriptdateien sind an vollständige SHA-256-Werte gebunden.
+- Nicht überlappende Textänderungen werden mit bestätigter unveränderter Referenz automatisch vereint. Unbekannte Kombinationen stoppen mit Diagnose, ohne Dateiauswahl in der Oberfläche.
+- Im schmalen Fenster bleiben alle sechs Schritte oben sichtbar. Der aktuelle Arbeitsschritt steht vor der langen Detailübersicht.
+- Synthetischer Browserlauf auf Windows: 46 Prüfungen mit Test-Transportadapter; reale Spielkompatibilität und Browser-Sitzungsübergabe stehen aus.
+
 - Windows-Pfadtrenner aus 7-Zip normalisiert; jede Datei mit Einzelgröße geprüft. Keine Sicherheitsprüfung entfernt.
 - Sieben persistente Fortschrittsstufen statt scheinbarer Gesamt-100-Prozent-Anzeige.
 - Separater lokaler mods-Ordner plus Downloadordner; identifizierbare Varianten automatisch, optionale Module nicht ungefragt aktiviert.

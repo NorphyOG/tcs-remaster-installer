@@ -39,12 +39,12 @@ def local_bridge(page, server, base):
         result={'status':response.status,'headers':dict(response.getheaders()),'body':base64.b64encode(data).decode()}
         connection.close(); return result
     page.expose_function('__local_test_request',request)
-    html=(base/'web/index.html').read_text()
+    html=(base/'web/index.html').read_text(encoding='utf-8')
     html=re.sub(r'<link[^>]*rel="stylesheet"[^>]*>', '', html)
     html=re.sub(r'<script[^>]*src="(?:app|auto|journey).js"[^>]*></script>', '', html)
     html=html.replace('src="icon.svg"','src="data:image/svg+xml;base64,'+base64.b64encode((base/'web/icon.svg').read_bytes()).decode()+'"')
     page.set_content(html)
-    page.add_style_tag(content=(base/'web/style.css').read_text())
+    page.add_style_tag(content=(base/'web/style.css').read_text(encoding='utf-8'))
     page.evaluate("""() => {
       window.__testDownloads=[];
       const click=HTMLAnchorElement.prototype.click;
@@ -63,12 +63,12 @@ def local_bridge(page, server, base):
         return new Response(output,{status:r.status,headers:r.headers});
       };
     }""")
-    script=(base/'web/app.js').read_text()
+    script=(base/'web/app.js').read_text(encoding='utf-8')
     first=script.index('let token=');last=script.index('let app=',first)
     script=script[:first]+'let token='+json.dumps(server.app.token)+';\n'+script[last:]
     page.add_script_tag(content=script)
-    page.add_script_tag(content=(base/'web/auto.js').read_text())
-    page.add_script_tag(content=(base/'web/journey.js').read_text())
+    page.add_script_tag(content=(base/'web/auto.js').read_text(encoding='utf-8'))
+    page.add_script_tag(content=(base/'web/journey.js').read_text(encoding='utf-8'))
 
 
 def wait_download(page, selector, bridge):
@@ -88,7 +88,7 @@ def main():
         def append(self,value):
             super().append(value); print('PASS',value,flush=True)
     artifacts=[]; checks=Checks()
-    (f.game/'CHARS'/'chars.txt').write_text('boba=1\njedi=2\nvehicle=3\n')
+    (f.game/'CHARS'/'chars.txt').write_bytes(b'boba=1\njedi=2\nvehicle=3\n')
     payloads=[
         ('Lego Star Wars The Complete Saga Modern Overhaul - DEMO Testdaten.zip',{
             'Main/CHARS/Boba/Body.gsc':b'\x00model-A',
@@ -118,14 +118,17 @@ def main():
             browser=pw.chromium.launch(headless=True,executable_path=executable,args=['--no-sandbox'])
             page=browser.new_page(viewport={'width':1440,'height':1120},device_scale_factor=1)
             page.on('pageerror',lambda e:errors.append(str(e)))
-            bridge=False
-            try:page.goto(server.app.origin+'/#'+server.app.token,timeout=10000)
-            except Error as exc:
-                if 'ERR_BLOCKED_BY_ADMINISTRATOR' not in str(exc):raise
-                bridge=True
-                page.close();page=browser.new_page(viewport={'width':1440,'height':1120},device_scale_factor=1)
-                page.on('pageerror',lambda e:errors.append(str(e)))
+            bridge=bool(os.environ.get('TCS_FORCE_BRIDGE'))
+            if bridge:
                 local_bridge(page,server,f.base)
+            else:
+                try:page.goto(server.app.origin+'/#'+server.app.token,timeout=10000)
+                except Error as exc:
+                    if 'ERR_BLOCKED_BY_ADMINISTRATOR' not in str(exc):raise
+                    bridge=True
+                    page.close();page=browser.new_page(viewport={'width':1440,'height':1120},device_scale_factor=1)
+                    page.on('pageerror',lambda e:errors.append(str(e)))
+                    local_bridge(page,server,f.base)
             page.wait_for_function("document.querySelector('#runtimeBadge').textContent.includes('Lokal verbunden')")
             checks.append('Wizard rendered in Chromium; local API authenticated'+(' through test-only transport adapter' if bridge else ''))
             page.fill('#gamePath',str(f.root/'wrong-game'));page.click('#checkGameBtn');page.wait_for_selector('#toast:not([hidden])')
@@ -178,22 +181,18 @@ def main():
             page.screenshot(path=str(output/'02-mapping.png'),full_page=False);artifacts.append('02-mapping.png')
             assert page.locator('[data-root-module=modern-overhaul]:checked').count()==1, page.evaluate('app.state.selections')
             page.click('#saveSelectionsBtn');page.click('#planBtn')
-            page.wait_for_function("document.querySelector('#planFreshness').textContent.includes('Konflikte brauchen')",timeout=60000)
+            page.wait_for_function("document.querySelector('#metrics .metric') || !document.querySelector('#toast').hidden",timeout=60000)
+            assert 'automatisch geregelt' in page.locator('#planFreshness').inner_text(), (page.locator('#planFreshness').inner_text(),page.locator('#toastText').inner_text(),server.app.job)
             counts=page.locator('.metric strong').all_text_contents()
-            assert counts[1]=='3',counts
-            assert page.locator('#toInstallBtn').is_disabled()
-            checks.append('Two binary conflicts and one text-merge proposal blocked installation')
-            page.screenshot(path=str(output/'03-conflicts.png'),full_page=True);artifacts.append('03-conflicts.png')
-            page.locator('[data-preview="chars/chars.txt"]').click()
-            page.wait_for_selector('#previewDialog[open]')
-            texts=page.locator('#previewDialog textarea').evaluate_all('(els)=>els.map(e=>e.value)')
-            assert any('boba=10' in s and 'vehicle=30' in s for s in texts),texts
-            page.click('#closePreview')
-            checks.append('Merge preview visibly preserved both independent synthetic text changes')
-            page.check('#acceptText');page.check('#acceptAuthors');page.click('#planBtn')
-            page.wait_for_function("document.querySelector('#planFreshness').textContent.includes('Dateiplan aufgelöst')",timeout=60000)
+            assert counts[1]=='2' and counts[2]=='1' and counts[3]=='0',counts
             assert not page.locator('#toInstallBtn').is_disabled()
-            checks.append('Explicit review enabled the resolved file plan; no binary merge was claimed')
+            assert page.locator('#resumeStepBtn').get_attribute('data-step')=='5'
+            checks.append('Two known author overlays and one non-overlapping text merge resolved automatically')
+            page.screenshot(path=str(output/'03-conflicts.png'),full_page=True);artifacts.append('03-conflicts.png')
+            assert page.locator('#conflicts select').count()==0
+            checks.append('Conflict screen does not request per-file variant choices')
+            page.locator('.project-info summary').click()
+            page.screenshot(path=str(output/'10-project-info.png'),full_page=False);artifacts.append('10-project-info.png')
             assert wait_download(page,'#downloadReportBtn',bridge)=='TCS-Pruefbericht.json'
             checks.append('Local JSON audit payload received; download action prepared')
             page.click('#toInstallBtn');page.click('#buildBtn')
@@ -213,6 +212,14 @@ def main():
             width=page.evaluate('({scroll:document.documentElement.scrollWidth,viewport:window.innerWidth})')
             assert width['scroll']<=width['viewport']+2,width
             checks.append('390px responsive layout has no horizontal page overflow')
+            page.evaluate("window.scrollTo(0,document.body.scrollHeight)")
+            assert page.locator('.sidebar').evaluate('e=>Math.round(e.getBoundingClientRect().top)')==0
+            assert all(page.locator(f'nav [data-step="{n}"]').is_visible() for n in range(1,7))
+            page.locator('nav [data-step="4"]').click()
+            assert page.locator('#step4 h1').is_visible()
+            page.evaluate("document.getElementById('demoLabel').style.cssText+='top:auto;bottom:10px;right:10px;'")
+            page.screenshot(path=str(output/'11-narrow-navigation.png'),full_page=False);artifacts.append('11-narrow-navigation.png')
+            checks.append('All six destinations remain reachable in the sticky narrow navigation')
             # Exercise the new permanent status panel using the REAL job endpoint.
             # The task itself is explicitly synthetic: no game/tools are executed.
             page.set_viewport_size({'width':1440,'height':1120})
@@ -228,7 +235,7 @@ def main():
                 page.wait_for_function("document.querySelector('#jobStatus').textContent.includes('Fehler')",timeout=15000)
             assert page.locator('#jobPanel').is_visible()
             assert 'TEST: Verbindung unterbrochen' in page.locator('#jobError').inner_text()
-            assert page.locator('#retryWorkflowBtn').is_visible()
+            page.wait_for_selector('#retryWorkflowBtn:visible',timeout=15000)
             checks.append('Background failure remains visible with phase, history and retry action')
             assert '1 MiB / 4 MiB' in page.locator('#jobCounts').inner_text()
             checks.append('Progress counter displays measured bytes, not invented completion')
@@ -368,6 +375,7 @@ def main():
             page.evaluate("document.getElementById('demoLabel').textContent='OBERFLÄCHENTEST · künstliche Daten · kein Spieltest'")
             page.evaluate('refreshAuto()')
             page.evaluate('window.scrollTo(0,0)')
+            page.locator('#journeyPanel').scroll_into_view_if_needed()
             page.screenshot(path=str(output/'08-step-progress.png'),full_page=False);artifacts.append('08-step-progress.png')
             page.locator('nav [data-step="2"]').click()
             page.evaluate('window.scrollTo(0,0)')
@@ -382,7 +390,7 @@ def main():
             # installation generated by the production engine (no Windows launch).
             server.app.engine.state['game']=str(f.game)
             settings=server.app.engine.state.copy();settings['game']=str(f.game)
-            settings['options'].update(clean_target_confirmed=True,prepared_confirmed=True,accept_text_merges=True,accept_author_replacements=True,baseline_confirmed=True)
+            settings['options'].update(clean_target_confirmed=True,prepared_confirmed=True,baseline_confirmed=True)
             plan=server.app.engine.make_plan(settings,lambda _:None)
             assert plan['counts']['conflicts']==0
             with patch.object(Engine,'_running',return_value=False):server.app.engine.install(plan,lambda _:None)
@@ -406,7 +414,7 @@ def main():
         if errors:raise AssertionError(errors)
         checks.append('No browser JavaScript exceptions')
         report={'passed':True,'checks':checks,'count':len(checks),'screenshots':artifacts,
-                'environment':'Linux Chromium via Playwright','transport_adapter_used':bridge,'browser_navigation_session_bootstrap_tested':not bridge,'browser_os_download_tested':not bridge,'test_data':'synthetic only','real_mod_archives_tested':False,'windows_tested':False}
+                'environment':f'{sys.platform} Chromium via Playwright','transport_adapter_used':bridge,'browser_navigation_session_bootstrap_tested':not bridge,'browser_os_download_tested':not bridge,'test_data':'synthetic only','real_mod_archives_tested':False,'windows_tested':False}
         (output/'BROWSER_TEST_REPORT.json').write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8')
         print(json.dumps(report,indent=2,ensure_ascii=False))
     finally:

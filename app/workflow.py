@@ -57,7 +57,7 @@ class Workflow:
         (self.engine.base/'mods').mkdir(exist_ok=True)
         state=self.engine.state
         defaults={'allow_tools':False,'auto_mapping':False,'watch_enabled':False,'watch_folder':'','armed':False,
-                  'author_replacements':False,'desktop_shortcut':True,'auto_watch':True,'auto_nexus':True,'watch_local_mods':True}
+                  'desktop_shortcut':True,'auto_watch':True,'auto_nexus':True,'watch_local_mods':True}
         for key,val in defaults.items():state['automation'].setdefault(key,val)
         if not state['automation'].get('watch_folder'):state['automation']['watch_folder']=default_download_folder()
         # Avoid importing the same watched archive again after a restart.
@@ -79,7 +79,7 @@ class Workflow:
                     'inventory':self.inventory(),'readiness':self.engine.state.get('readiness')}
     def configure(self, data):
         a=self.engine.state['automation']
-        for key in ('allow_tools','auto_mapping','watch_enabled','author_replacements','desktop_shortcut','auto_watch','auto_nexus','watch_local_mods'):
+        for key in ('allow_tools','auto_mapping','watch_enabled','desktop_shortcut','auto_watch','auto_nexus','watch_local_mods'):
             if key in data:a[key]=data[key] is True
         if 'watch_folder' in data:
             if not isinstance(data['watch_folder'],str) or not data['watch_folder'].strip():raise BuildError('Bitte einen gültigen Downloadordner auswählen.')
@@ -244,8 +244,8 @@ class Workflow:
         settings={k:self.engine.state.get(k,'') for k in ('game','baseline')}
         settings.update({k:self.engine.state.get(k,{}) for k in ('selections','options','decisions')})
         settings['options']=dict(settings['options'])
-        settings['options']['accept_author_replacements']=self.engine.state['automation']['author_replacements']
-        # Text merge opt-in is still a separate review; don't certify the baseline by guessing.
+        settings['decisions']={}
+        # Baseline trust remains explicit; valid non-overlapping text changes merge automatically.
         stage(log,'compare','running','Aktiviertes Rezept und Dateikonflikte prüfen')
         plan=self.engine.make_plan(settings,log)
         if plan['counts']['conflicts']:

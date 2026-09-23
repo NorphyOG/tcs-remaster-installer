@@ -9,7 +9,7 @@ An unofficial, local Windows mod installer for **LEGO Star Wars: The Complete Sa
 1. Extract the complete package outside the game directory.
 2. Open `README.html` for the illustrated guide, then double-click `STARTEN.cmd` on Windows. `IM_BROWSER.cmd` opens the normal browser instead of the app window.
 3. Select your own installed PC copy and confirm preparation. Use the displayed links to download the required files from the original author pages.
-4. Leave completed archives in your chosen Downloads folder or in the installer's `mods` folder. Review any unrecognized version or file conflict before installation.
+4. Leave completed archives in your chosen Downloads folder or in the installer's `mods` folder. The file comparison resolves known recipe overlays and safe text merges automatically, without per-file variant choices. Unknown versions stop with a report.
 5. Verify the installed files, start the selected game copy, then test gameplay and mod behavior yourself.
 
 Python 3.10 or newer is required. Nexus Premium is not required; free downloads still need confirmation on Nexus. ReShade and ASI runtimes require separate setup.

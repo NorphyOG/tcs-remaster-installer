@@ -10,3 +10,24 @@
 
 /* 0.4: stable, independently completed stages; no fake moving percentage. */
 .brand-icon{width:44px;height:44px;flex-shrink:0}.journey{border:1px solid #2d4655;background:linear-gradient(125deg,#112330,#101721);border-radius:18px;padding:24px;margin:22px 0}.journey-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}.journey-heading h2{margin:7px 0 0;font-size:23px}.journey-segments{display:flex;gap:5px;margin:22px 0}.journey-segments span{height:5px;background:#263844;border-radius:3px;flex:1}.journey-segments .done{background:#5be0b9}.journey-segments .running{background:#e8c17b}.journey-segments .error{background:#ee9b9b}.journey-stages{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.stage-card{padding:16px 18px;background:#0d1721;border:1px solid #233746;border-radius:11px;min-width:0}.stage-card.done{border-color:#27564c}.stage-card.running{border-color:#8d764e;background:#1c211f}.stage-card.error{border-color:#a16466}.stage-card:last-child{grid-column:1/-1}.stage-title{display:flex;align-items:center;gap:10px}.stage-title strong{font-size:14px;line-height:1.3}.stage-number{font-size:12px;font-weight:800;color:#9fb8cb;min-width:23px}.done .stage-number{color:#5be0b9}.stage-label{margin-left:auto;color:#9db2c3;font-size:11px;white-space:nowrap}.stage-meter{height:6px;background:#213341;border-radius:6px;overflow:hidden;margin:13px 0 7px}.stage-meter span{display:block;height:100%;background:#e8c17b;transition:width .18s ease-out}.done .stage-meter span{background:#5be0b9}.stage-meter.unmeasured{background:repeating-linear-gradient(115deg,#273a44 0,#273a44 7px,#172a34 7px,#172a34 14px)}.stage-value{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#adc3d3}.stage-value small{font-size:10px}.stage-detail{color:#95aab9;font-size:11px;line-height:1.5;margin:8px 0 0;overflow-wrap:anywhere}.journey-note{font-size:11px;color:#96acbc;margin:17px 0 0;line-height:1.5}.working-note{font-size:12px;color:#aac2d0;padding:10px 0}.progressline{display:none!important}.optional-muted{opacity:.72}.inventory>div{padding:10px 0;border-bottom:1px solid #243646;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.inventory strong{font-size:13px;flex:1}.inventory small{width:100%;color:#e8c17b}.job-panel{margin-top:16px}.quick-download{margin-bottom:20px}#jobMeter,#jobCounts{display:none!important}@media(max-width:760px){.journey{padding:16px}.journey-stages{grid-template-columns:1fr}.journey-heading{align-items:flex-start;flex-direction:column}.stage-card:last-child{grid-column:auto}}@media(prefers-reduced-motion:reduce){.stage-meter span{transition:none}}
+
+/* Keep the current task and all six destinations reachable in the narrow app window. */
+.step{scroll-margin-top:18px}
+.overview-actions{display:flex;flex-direction:column;align-items:flex-end;gap:9px;flex-shrink:0}
+.overview-actions .pill{white-space:nowrap}
+.overview-actions button{max-width:100%;text-align:center}
+.journey{margin-top:32px}
+.project-info{margin-bottom:0}
+@media(max-width:700px){
+ .sidebar{position:sticky;top:0;z-index:10;height:auto;padding:9px 12px 10px;border-right:0;border-bottom:1px solid var(--line);box-shadow:0 8px 24px #0008}
+ .brand{margin-bottom:8px;gap:8px}
+ .brand-icon{width:30px;height:30px}
+ .brand strong{font-size:13px}
+ .brand small{font-size:9px;letter-spacing:0}
+ .sidebar nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;overflow:visible}
+ .sidebar .nav{width:100%;min-width:0;min-height:36px;padding:6px 3px;justify-content:center;text-align:center;white-space:normal;font-size:11px;line-height:1.15}
+ .main{padding-top:15px}
+ .step{scroll-margin-top:137px}
+ .overview-actions{width:100%;align-items:stretch;flex-direction:row;flex-wrap:wrap}
+ .overview-actions button{width:100%}
+}

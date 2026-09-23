@@ -19,6 +19,8 @@ Die Diagnose für `Compatibility Patches - Vader Enhancer Addon-133-1-0-17700923
 
 ## Zusammenführen
 
-Unterschiedliche Pfade: übernehmen. Identische Dateien: deduplizieren. Geeignete nicht überlappende Textänderungen: Referenz-basierter Vorschlag und Freigabe. Binäre Grafikdateien werden nicht automatisch „zusammengeklebt“. Gewollte Autoren-Ersetzungen heißen Ersetzungen; ein Patch für ein anderes Modul wird nicht als kompatibel ausgegeben.
+Unterschiedliche Pfade werden übernommen, identische Dateien dedupliziert. Die im Profil festgelegte Reihenfolge überlagert bekannte CHARS/STUFF-Modell- und Grafikdateien automatisch: Modern Overhaul → Infinities → passender Additional-Levels- oder Vader-Patch. Das folgt der [Installationsanleitung des Infinities-Autors](https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133). Dabei wird **eine vollständige Autorendatei gewählt**, nicht der Inhalt zweier Binärdateien verschmolzen.
+
+Zehn zusätzlich geprüfte Text-/Skriptkollisionen des aktuellen Rezepts sind an die SHA-256-Werte **aller** beteiligten Dateien gebunden. Dazu gehören die Kombination aus Episode-III-Addon und Additional Levels: Die gewählte Episode-III-Datei enthält die geprüften Additional-Levels-Ergänzungen. Ändert sich ein Hash, ein Modul oder dessen Reihenfolge, greift die Regel nicht mehr. Sonstige Textänderungen werden nur mit bestätigter unveränderter Referenz und ohne überlappende Änderungen automatisch per Drei-Wege-Merge vereint. Unbekannte Konflikte blockieren die Installation; eine bestandene Datei-Auflösung beweist keine Spielkompatibilität oder Herkunft der Modarchive.
 
 Die übrigen optionalen Infinities-Stile, alternative Icons, separate Character-Packs, ReShade-/ASI-Runtimes sind nicht automatisch Teil des Standardprofils. Sie können überschneidende Dateien oder zusätzliche Voraussetzungen mitbringen. Die volle bisherige Entscheidungsübersicht steht in `mod-audit.json`.

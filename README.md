@@ -20,6 +20,11 @@ Downloads zuordnen, Originaldaten vorbereiten, Modkonflikte prüfen, Sicherungen
 4. **„Nächste fehlende Datei öffnen“** drücken und auf Nexus herunterladen. Der Assistent beobachtet nach Freigabe deinen gewählten Downloadordner **und `mods` neben `STARTEN.cmd`**. Nur vollständige passende Archive werden übernommen; nicht selbst entpacken.
 5. Eindeutige passende Varianten werden zugeordnet. Unbekannte Fassungen oder echte Konflikte erfordern Prüfung. Nach Installation folgen SHA-256-Dateiprüfung und **„Geprüften Spielbuild starten“**. Die Mods anschließend im Spiel selbst kontrollieren.
 
+**Zusammenführen läuft automatisch:** Der Dateivergleich übernimmt bekannte Autorendateien in dokumentierter Reihenfolge, regelt zehn geprüfte Text-/Skriptdateien über vollständige SHA-256-Werte und vereint weitere nicht überlappende Textänderungen mit bestätigter unveränderter Referenz. Du musst keine Variante pro Datei auswählen. Unbekannte Kombinationen stoppen sicher; der Prüfbericht nennt den Grund. [Regeln und Grenzen](docs/MOD_COMPATIBILITY.md).
+
+![Alle sechs Schritte bleiben im schmalen Fenster oben erreichbar](docs/11-narrow-navigation.png)
+*Bild: künstliche Testinstallation bei 390 px Fensterbreite; keine echten Mods.*
+
 Ohne Nexus Premium bleiben die Downloadbestätigungen auf Nexus nötig. Kein Paywall-/Warteschlangen-Bypass. Nexus-Schlüssel sind optional und werden nur im RAM gehalten. ReShade-/ASI-Runtimes sind nicht Bestandteil der automatischen Dateninstallation.
 
 ## Update von 0.3.x – nichts neu herunterladen

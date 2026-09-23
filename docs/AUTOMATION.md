@@ -16,7 +16,7 @@ Stufen werden unter `.local/steps.json` gespeichert. Laufende Stufen werden nach
 
 ## Was selbstständig weiterläuft
 
-Nach ausdrücklicher Aktivierung: passende fertige Downloads erkennen, sicher entpacken, eindeutige Rezeptzuordnung, bekannte Autoren-Ersetzungen gemäß Freigabe, konfliktfreien Plan installieren und Dateiprüfung. Kostenloses Nexus benötigt Browserbestätigungen; Premium/API können autorisierte Downloads erlauben, sind hier nicht mit einem echten Konto getestet.
+Nach ausdrücklicher Aktivierung: passende fertige Downloads erkennen, sicher entpacken, eindeutige Rezeptzuordnung, bekannte Autoren-Überlagerungen und zulässige nicht überlappende Text-Merges ohne Dateiauswahl, konfliktfreien Plan installieren und Dateiprüfung. Kostenloses Nexus benötigt Browserbestätigungen; Premium/API können autorisierte Downloads erlauben, sind hier nicht mit einem echten Konto getestet.
 
 ## Wann der Installer anhält
 

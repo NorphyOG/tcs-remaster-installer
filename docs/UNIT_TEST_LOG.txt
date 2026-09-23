@@ -1,3 +1,4 @@
+Sandbox-Ausnahmen: echte tasklist-Abfrage und Symlink-Erstellung. Ausgewählt: 357
 test_allowed_cdn (test_downloads.DownloadTests.test_allowed_cdn) ... ok
 test_allowed_https (test_downloads.DownloadTests.test_allowed_https) ... ok
 test_api_host_only (test_downloads.DownloadTests.test_api_host_only) ... ok
@@ -39,8 +40,6 @@ test_ignores_unrelated (test_downloads.WatchTests.test_ignores_unrelated) ... ok
 test_same_file_imported_once (test_downloads.WatchTests.test_same_file_imported_once) ... ok
 test_waits_for_stability (test_downloads.WatchTests.test_waits_for_stability) ... ok
 test_archive_mutation_after_import_refused (test_engine.EngineTests.test_archive_mutation_after_import_refused) ... ok
-test_author_proposal_requires_consent (test_engine.EngineTests.test_author_proposal_requires_consent) ... ok
-test_author_scope_not_arbitrary_text (test_engine.EngineTests.test_author_scope_not_arbitrary_text) ... ok
 test_before_snapshot_changed (test_engine.EngineTests.test_before_snapshot_changed) ... ok
 test_binary_unknown_block (test_engine.EngineTests.test_binary_unknown_block) ... ok
 test_build_zip_layout (test_engine.EngineTests.test_build_zip_layout) ... ok
@@ -59,6 +58,7 @@ test_import_fills_ui_placeholder_selection (test_engine.EngineTests.test_import_
 test_import_keeps_existing_assignment (test_engine.EngineTests.test_import_keeps_existing_assignment) ... ok
 test_install_failure_rolls_back (test_engine.EngineTests.test_install_failure_rolls_back) ... ok
 test_install_restore (test_engine.EngineTests.test_install_restore) ... ok
+test_known_author_overlay_is_automatic (test_engine.EngineTests.test_known_author_overlay_is_automatic) ... ok
 test_main_file_staged (test_engine.EngineTests.test_main_file_staged) ... ok
 test_missing_patch (test_engine.EngineTests.test_missing_patch) ... ok
 test_no_modules_rejected (test_engine.EngineTests.test_no_modules_rejected) ... ok
@@ -66,11 +66,12 @@ test_overlapping_text_block (test_engine.EngineTests.test_overlapping_text_block
 test_publish_blocks_binary (test_engine.EngineTests.test_publish_blocks_binary) ... ok
 test_publish_blocks_wrong_allowlist (test_engine.EngineTests.test_publish_blocks_wrong_allowlist) ... ok
 test_publish_excludes_local (test_engine.EngineTests.test_publish_excludes_local) ... ok
+test_recipe_scope_not_arbitrary_text (test_engine.EngineTests.test_recipe_scope_not_arbitrary_text) ... ok
 test_restore_missing_backup_refused (test_engine.EngineTests.test_restore_missing_backup_refused) ... ok
 test_restore_refuses_later_change (test_engine.EngineTests.test_restore_refuses_later_change) ... ok
 test_second_install_refused (test_engine.EngineTests.test_second_install_refused) ... ok
 test_suggest_classic (test_engine.EngineTests.test_suggest_classic) ... ok
-test_threeway_review_required (test_engine.EngineTests.test_threeway_review_required) ... ok
+test_threeway_nonoverlapping_merges_automatically_with_baseline (test_engine.EngineTests.test_threeway_nonoverlapping_merges_automatically_with_baseline) ... ok
 test_unconfirmed_source (test_engine.EngineTests.test_unconfirmed_source) ... ok
 test_unconfirmed_target_refused (test_engine.EngineTests.test_unconfirmed_target_refused) ... ok
 test_unprepared_install_refused (test_engine.EngineTests.test_unprepared_install_refused) ... ok
@@ -107,7 +108,6 @@ test_german_oem_output_does_not_need_text_decode (test_hotfix.ProcessRegressionT
 test_matching_only_first_csv_field (test_hotfix.ProcessRegressionTests.test_matching_only_first_csv_field) ... ok
 test_none_output_fails_closed (test_hotfix.ProcessRegressionTests.test_none_output_fails_closed) ... ok
 test_process_start_failure_is_actionable (test_hotfix.ProcessRegressionTests.test_process_start_failure_is_actionable) ... ok
-test_real_windows_tasklist_output_is_readable (test_hotfix.ProcessRegressionTests.test_real_windows_tasklist_output_is_readable) ... skipped 'Requires actual Windows; not replaced by synthetic proof'
 test_running_exe_csv_detected (test_hotfix.ProcessRegressionTests.test_running_exe_csv_detected) ... ok
 test_timeout_is_actionable (test_hotfix.ProcessRegressionTests.test_timeout_is_actionable) ... ok
 test_unicode_adapter_supported (test_hotfix.ProcessRegressionTests.test_unicode_adapter_supported) ... ok
@@ -205,7 +205,6 @@ test_payload_offset_into_header_stops (test_pak_bounds.PakBoundsTests.test_paylo
 test_reported_offsets_reproduce_19_byte_shortfall (test_pak_bounds.PakBoundsTests.test_reported_offsets_reproduce_19_byte_shortfall) ... ok
 test_short_content_resembling_truncated_header_is_rejected (test_pak_bounds.PakBoundsTests.test_short_content_resembling_truncated_header_is_rejected) ... ok
 test_short_not_last_does_not_probe_into_the_next_entry (test_pak_bounds.PakBoundsTests.test_short_not_last_does_not_probe_into_the_next_entry) ... ok
-test_symlink_target_refused (test_pak_bounds.PakBoundsTests.test_symlink_target_refused) ... ok
 test_truncated_payload_stops_before_any_file_is_written (test_pak_bounds.PakBoundsTests.test_truncated_payload_stops_before_any_file_is_written) ... ok
 test_truncated_table_stops (test_pak_bounds.PakBoundsTests.test_truncated_table_stops) ... ok
 test_unknown_magic_returns_none_not_false_success (test_pak_bounds.PakBoundsTests.test_unknown_magic_returns_none_not_false_success) ... ok
@@ -244,6 +243,9 @@ test_restore_returns_originals (test_preparation.PreparationTests.test_restore_r
 test_same_existing_file_preserved_on_restore (test_preparation.PreparationTests.test_same_existing_file_preserved_on_restore) ... ok
 test_stage_does_not_modify_game (test_preparation.PreparationTests.test_stage_does_not_modify_game) ... ok
 test_unknown_existing_mod_is_not_overwritten (test_preparation.PreparationTests.test_unknown_existing_mod_is_not_overwritten) ... ok
+test_all_checked_text_and_script_rules_require_exact_bytes (test_recipe_overlays.RecipeOverlayTests.test_all_checked_text_and_script_rules_require_exact_bytes) ... ok
+test_documented_author_model_order (test_recipe_overlays.RecipeOverlayTests.test_documented_author_model_order) ... ok
+test_unknown_binary_combination_remains_blocked (test_recipe_overlays.RecipeOverlayTests.test_unknown_binary_combination_remains_blocked) ... ok
 test_ads_still_rejected (test_release04.ArchiveCompare04Tests.test_ads_still_rejected) ... ok
 test_directory_rows_not_counted (test_release04.ArchiveCompare04Tests.test_directory_rows_not_counted) ... ok
 test_duplicate_different_slashes_rejected (test_release04.ArchiveCompare04Tests.test_duplicate_different_slashes_rejected) ... ok
@@ -306,7 +308,7 @@ test_case_collision (test_safety.SafetyTests.test_case_collision) ... ok
 test_copy_hash (test_safety.SafetyTests.test_copy_hash) ... ok
 test_executable_assets_rejected (test_safety.SafetyTests.test_executable_assets_rejected) ... ok
 test_file_directory_collision (test_safety.SafetyTests.test_file_directory_collision) ... ok
-test_folder_no_links (test_safety.SafetyTests.test_folder_no_links) ... ok
+test_folder_no_links (test_safety.SafetyTests.test_folder_no_links) ... skipped 'OS does not allow symlink creation'
 test_root_executable_not_copied (test_safety.SafetyTests.test_root_executable_not_copied) ... ok
 test_unknown_root_rejected (test_safety.SafetyTests.test_unknown_root_rejected) ... ok
 test_valid_unicode_path (test_safety.SafetyTests.test_valid_unicode_path) ... ok
@@ -356,6 +358,6 @@ test_unknown_variant_not_auto_confirmed (test_workflow.WorkflowTests.test_unknow
 test_wrong_start_confirmation_does_not_arm (test_workflow.WorkflowTests.test_wrong_start_confirmation_does_not_arm) ... ok
 
 ----------------------------------------------------------------------
-Ran 356 tests in 26.163s
+Ran 357 tests in 38.972s
 
 OK (skipped=1)

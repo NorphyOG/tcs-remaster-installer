@@ -15,6 +15,7 @@ from typing import Callable
 from safety import (ANCHORS, BLOCKED, MAX_BYTES, MAX_FILES, BuildError, Source, bytehash, checked_entries,
                     digest, find_7zip, linked, no_links, safe_rel, unpack_external)
 from merge import merge3, decode
+from recipe_overlays import choose_overlay
 
 APP_ID='nor.per.tcs.remaster.local'
 EXE='LEGOStarWarsSaga.exe'
@@ -158,15 +159,6 @@ class Engine:
         h=bytehash(data); p=self.blob(h)
         if not p.exists(): p.write_bytes(data)
         return {'sha256':h,'bytes':len(data)}
-    def author_candidate(self,path:str,versions:list[dict]) -> bool:
-        # A narrow *proposal*, never an automatic binary merge.
-        providers={v['module'] for v in versions}; last=versions[-1]['module']
-        if path.split('/')[0].casefold() not in ('chars','stuff'): return False
-        if PurePosixPath(path).suffix.lower() not in ('.gsc','.dds','.tga','.png','.bmp'): return False
-        if last=='infinities' and providers <= {'modern-overhaul','infinities'}: return True
-        if last=='infinities-al-patch' and providers <= {'modern-overhaul','additional-levels-mo','infinities','infinities-al-patch'}: return True
-        if last=='infinities-vader-patch' and providers <= {'modern-overhaul','ep3-additions','infinities','infinities-vader-patch'}: return True
-        return False
     def make_plan(self,settings:dict,log:Callable=print) -> dict:
         from diagnostics import phase, check_cancel, progress
         from steps import stage
@@ -188,6 +180,7 @@ class Engine:
             if not set(m['requires'])<=ids: raise BuildError('Fehlende Abhängigkeit für '+m['name'])
             sel=selections[m['id']]
             if not sel.get('confirmed') or not sel.get('roots'): raise BuildError('Datei und Daten-Unterordner bestätigen: '+m['name'])
+        stage(log,'mapping','done','Aktivierte Module, Unterordner und Abhängigkeiten bestätigt')
         baseline=None
         if options.get('baseline_confirmed'):
             bp=settings.get('baseline') or game['path']
@@ -233,9 +226,10 @@ class Engine:
             if len(hashes)==1: row['strategy']='identical-deduplicated' if len(raw)>1 else 'single-mod'
             else:
                 decision=decisions.get(key)
+                overlay=choose_overlay(path,unique)
                 proposal=None
                 basepath=casepath(baseline,path) if baseline else None
-                if basepath and basepath.is_file() and basepath.stat().st_size<=2*1024**2:
+                if not overlay and basepath and basepath.is_file() and basepath.stat().st_size<=2*1024**2:
                     base=basepath.read_bytes(); merged=base; success=True
                     for v in unique:
                         if v['bytes']>2*1024**2: success=False; break
@@ -245,8 +239,6 @@ class Engine:
                     if success:
                         proposal={**self.put_bytes(merged),'module':'three-way-merge','root':''}
                         row['merge_proposal']=proposal
-                authored=self.author_candidate(path,unique)
-                row['author_replacement_proposal']=authored
                 if decision and decision.get('type')=='provider':
                     candidates=[v for v in unique if v['module']==decision.get('module')]
                     if not candidates: raise BuildError('Konfliktentscheidung passt nicht mehr zu '+path)
@@ -257,13 +249,13 @@ class Engine:
                     if pp.stat().st_size>512*1024**2: raise BuildError('Manuelle Patchdatei zu groß.')
                     winner={**self.put_bytes(pp.read_bytes()),'module':'user-merged-file','root':''}
                     row['strategy']='explicit-patch-file'; row['reason']='Vom Nutzer gewählte Ersatz-/Merge-Datei; keine automatisierte Spielprüfung.'
-                elif proposal and options.get('accept_text_merges'):
-                    winner=proposal; row['strategy']='reviewed-three-way-text'; row['reason']='Nicht überlappende Textänderungen; vom Nutzer zur Verwendung bestätigt.'
-                elif authored and options.get('accept_author_replacements'):
-                    winner=unique[-1]; row['strategy']='approved-author-replacement'; row['reason']='Explizit bestätigte Autorenvariante. Ganze Datei ersetzt; kein Binär-Merge.'
+                elif overlay:
+                    winner=unique[overlay[0]]; row['strategy']='recipe-overlay'; row['reason']=overlay[1]
+                elif proposal:
+                    winner=proposal; row['strategy']='automatic-three-way-text'; row['reason']='Nicht überlappende Textänderungen gegen bestätigte unveränderte Referenz automatisch vereint; Spiellogik ungeprüft.'
                 else:
                     row['status']='blocked'; row['strategy']='needs-review'
-                    row['reason']=row['reason'] or ('Textvorschlag im Bericht prüfen und bestätigen.' if proposal else 'Unterschiedliche Dateien. Passenden Patch auswählen oder eine Variante bewusst bevorzugen.')
+                    row['reason']=row['reason'] or 'Unbekannte Dateikombination. Automatik stoppt; passende Version oder geprüften Kompatibilitätspatch verwenden.'
                     conflicts.append(row)
             row['result']=winner; records.append(row)
         if options.get('graphics'):
@@ -275,8 +267,9 @@ class Engine:
         plan={'id':uuid.uuid4().hex,'created':now(),'game':game,'baseline':str(baseline) if baseline else None,
               'sources':sources_used,'records':records,'conflicts':conflicts,'settings':settings,
               'counts':{'files':len(records),'conflicts':len(conflicts),'bytes':sum(r['result']['bytes'] for r in records),
-                        'text_proposals':sum(bool(r.get('merge_proposal')) for r in records),
-                        'author_proposals':sum(bool(r.get('author_replacement_proposal')) for r in records)},
+                        'recipe_overlays':sum(r['strategy']=='recipe-overlay' for r in records),
+                        'text_merges':sum(r['strategy']=='automatic-three-way-text' for r in records),
+                        'text_proposals':sum(bool(r.get('merge_proposal')) for r in records)},
               'gameplay_tested':False,'author_archive_hashes_verified':False}
         jsonwrite(self.local/'plans'/(plan['id']+'.json'),plan)
         self.plan=plan; self.state.update({'selections':selections,'options':options,'game':game['path'],'baseline':settings.get('baseline',''),'decisions':decisions})

@@ -9,7 +9,7 @@ Vorschlag Repository-Name: `tcs-remaster-installer`
 Beschreibung zum Kopieren:
 
 ```text
-Local Windows modpack installer for LEGO Star Wars: The Complete Saga. Safe extraction, conflict review, backups, Nexus download handoff and verified game launch. No game assets included.
+Local Windows modpack installer for LEGO Star Wars: The Complete Saga. Automatic checked mod overlays, backups, Nexus download handoff and verified game launch. No game assets included.
 ```
 
 Vorschlag Topics:

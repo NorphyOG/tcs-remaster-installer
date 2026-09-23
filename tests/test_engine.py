@@ -34,23 +34,24 @@ class EngineTests(unittest.TestCase):
         for m,val in [('modern-overhaul',b'\x00a'),('additional-levels-mo',b'\x00b')]:self.f.add(m,{'STUFF/THINGS_PC.GSC':val})
         p=self.p();self.assertEqual(p['counts']['conflicts'],1)
         with self.assertRaises(BuildError):self.f.engine.make_build(p)
-    def test_threeway_review_required(self):
+    def test_threeway_nonoverlapping_merges_automatically_with_baseline(self):
         (self.f.game/'CHARS'/'chars.txt').write_bytes(b'a\nb\nc\n')
         self.f.add('modern-overhaul',{'CHARS/chars.txt':'A\nb\nc\n'});self.f.add('additional-levels-mo',{'CHARS/chars.txt':'a\nb\nC\n'})
-        p=self.p(baseline_confirmed=True);self.assertEqual(p['counts']['text_proposals'],1);self.assertEqual(p['counts']['conflicts'],1)
-        p=self.p(baseline_confirmed=True,accept_text_merges=True);self.assertEqual(p['counts']['conflicts'],0)
+        self.assertEqual(self.p()['counts']['conflicts'],1)
+        p=self.p(baseline_confirmed=True);self.assertEqual(p['counts']['text_merges'],1);self.assertEqual(p['counts']['conflicts'],0)
+        self.assertEqual(p['records'][0]['strategy'],'automatic-three-way-text')
         self.assertEqual(self.f.engine.blob(p['records'][0]['result']['sha256']).read_bytes(),b'A\nb\nC\n')
     def test_overlapping_text_block(self):
         (self.f.game/'CHARS'/'chars.txt').write_text('a\nb\n')
         self.f.add('modern-overhaul',{'CHARS/chars.txt':'a\nB\n'});self.f.add('additional-levels-mo',{'CHARS/chars.txt':'a\nC\n'})
-        p=self.p(baseline_confirmed=True,accept_text_merges=True);self.assertEqual(p['counts']['conflicts'],1)
-    def test_author_proposal_requires_consent(self):
+        p=self.p(baseline_confirmed=True);self.assertEqual(p['counts']['conflicts'],1)
+    def test_known_author_overlay_is_automatic(self):
         self.f.add('modern-overhaul',{'CHARS/Boba/Body.gsc':b'\x00a'});self.f.add('infinities',{'CHARS/Boba/Body.gsc':b'\x00b'})
-        p=self.p();self.assertEqual(p['counts']['conflicts'],1);self.assertEqual(p['counts']['author_proposals'],1)
-        p=self.p(accept_author_replacements=True);self.assertEqual(p['counts']['conflicts'],0);self.assertEqual(p['records'][0]['strategy'],'approved-author-replacement')
-    def test_author_scope_not_arbitrary_text(self):
+        p=self.p();self.assertEqual(p['counts']['conflicts'],0);self.assertEqual(p['counts']['recipe_overlays'],1)
+        self.assertEqual(p['records'][0]['strategy'],'recipe-overlay');self.assertEqual(p['records'][0]['result']['module'],'infinities')
+    def test_recipe_scope_not_arbitrary_text(self):
         self.f.add('modern-overhaul',{'CHARS/a.txt':'a'});self.f.add('infinities',{'CHARS/a.txt':'b'})
-        self.assertEqual(self.p(accept_author_replacements=True)['counts']['conflicts'],1)
+        self.assertEqual(self.p()['counts']['conflicts'],1)
     def test_explicit_provider(self):
         self.f.add('modern-overhaul',{'STUFF/A.gsc':'a'});self.f.add('additional-levels-mo',{'STUFF/A.gsc':'b'})
         settings=self.f.settings();settings['decisions']={'stuff/a.gsc':{'type':'provider','module':'modern-overhaul'}}

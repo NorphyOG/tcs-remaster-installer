@@ -2,13 +2,14 @@
 let lastJobId='', autoSyncing=false,autoPollBusy=false,nexusFiles=new Map(),lastObservedImport=null;
 function recordObservedJob(job){if(job?.id&&!job.running)lastJobId=job.id;}
 function recordObservedState(state){recordObservedJob(state.job);const event=state.workflow?.last_import?.event_id;if(event)lastObservedImport=event;}
-function autoPayload(){return {allow_tools:$('allowTools').checked,auto_mapping:$('autoMapping').checked,author_replacements:$('autoAuthors').checked,desktop_shortcut:$('desktopShortcut').checked,auto_watch:$('autoWatchDownloads').checked,auto_nexus:$('autoNexusDownloads').checked};}
+function autoPayload(){return {allow_tools:$('allowTools').checked,auto_mapping:$('autoMapping').checked,desktop_shortcut:$('desktopShortcut').checked,auto_watch:$('autoWatchDownloads').checked,auto_nexus:$('autoNexusDownloads').checked};}
 async function saveAuto(){await api('settings',settings());return api('automation/settings',autoPayload());}
 function renderAuto(status,fill=false){
  const a=status.automation,n=status.nexus;
  if(typeof renderInventory==='function')renderInventory(status.inventory||[]);
- $('autoMessage').textContent=status.message;
- $('autoHeadline').textContent=a.armed?'Automatik wartet oder installiert nach Prüfung.':app?.state.installed_game?'Moddateien installiert · jetzt im Spiel testen.':'Spielvorbereitung und Downloadübergabe';
+ const planReady=plan&&!dirty&&!plan.counts.conflicts;
+ $('autoMessage').textContent=planReady?'Bekannte Dateikollisionen automatisch geregelt. Installation und Spieltest stehen noch aus.':status.message;
+ $('autoHeadline').textContent=planReady?'Dateiplan bereit · als Nächstes installieren':a.armed?'Automatik wartet oder installiert nach Prüfung.':app?.state.installed_game?'Moddateien installiert · jetzt im Spiel testen.':'Spielvorbereitung und Downloadübergabe';
  $('autoBadge').textContent=a.armed?'Automatik aktiv':'Kontrollierter Modus';
  $('autoBadge').className='pill'+(a.armed?' good':'');
  $('nexusStatus').textContent=n.connected?'Verbunden: '+n.name+' · '+(n.premium?'Premium-Direktdownloads möglich':'Kostenlos · Browserbestätigung nötig'):'Nicht verbunden · Downloadordner funktioniert auch ohne API-Schlüssel.';
@@ -17,7 +18,7 @@ function renderAuto(status,fill=false){
  $('autoDownloadFolder').textContent=a.watch_folder?'Downloadordner: '+a.watch_folder:'Kein Downloadordner erkannt. In Schritt 2 auswählen oder Archive hineinziehen.';
  const protocol=status.nxm_protocol;
  $('nxmStatus').textContent=protocol.registered?'NXM-Zuordnung eingerichtet. Vorherige Zuordnung ist lokal gesichert.':protocol.handler?'Bisheriger NXM-Handler: '+protocol.handler:'Noch keine NXM-Zuordnung erkannt. Downloadordner ist die einfachere Alternative.';
- if(fill){autoSyncing=true;for(const [id,key] of [['allowTools','allow_tools'],['autoMapping','auto_mapping'],['autoAuthors','author_replacements'],['desktopShortcut','desktop_shortcut'],['autoWatchDownloads','auto_watch'],['autoNexusDownloads','auto_nexus']])$(id).checked=!!a[key];$('watchFolder').value=a.watch_folder||'';autoSyncing=false;}
+ if(fill){autoSyncing=true;for(const [id,key] of [['allowTools','allow_tools'],['autoMapping','auto_mapping'],['desktopShortcut','desktop_shortcut'],['autoWatchDownloads','auto_watch'],['autoNexusDownloads','auto_nexus']])$(id).checked=!!a[key];$('watchFolder').value=a.watch_folder||'';autoSyncing=false;}
 }
 async function refreshAuto(fill=false){const status=await api('automation/status',null,'GET');renderAuto(status,fill);return status;}
 async function afterAutoJob(result,background=false){
@@ -88,7 +89,7 @@ async function autoClick(event){
 document.addEventListener('click',e=>autoClick(e).catch(error));
 document.addEventListener('change',e=>{
  if(autoSyncing||!app)return;
- if(['allowTools','autoMapping','autoAuthors','desktopShortcut','autoWatchDownloads','autoNexusDownloads'].includes(e.target.id))api('automation/settings',autoPayload()).then(r=>renderAuto(r)).catch(error);
+ if(['allowTools','autoMapping','desktopShortcut','autoWatchDownloads','autoNexusDownloads'].includes(e.target.id))api('automation/settings',autoPayload()).then(r=>renderAuto(r)).catch(error);
  if(e.target.dataset.enabled==='ep3-additions'){
   const enabled=e.target.checked;app.state.selections['infinities-vader-patch'].enabled=enabled;renderModules();markDirty();
  }

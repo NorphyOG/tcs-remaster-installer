@@ -6,6 +6,8 @@ ZIP komplett entpacken. `README.html` ist die Offline-Anleitung, nicht das schre
 
 Die Spielordnerauswahl muss die vorhandene `LEGOStarWarsSaga.exe` enthalten. Der Installer prüft die Struktur und das laufende Spiel. Original-DATs werden isoliert entpackt, kontrolliert und erst dann gesichert. Bereits vorbereitete Kopien werden wiedererkannt. Niemals manuell DLLs oder `.local` löschen, um eine Prüfung zu umgehen.
 
+Die Oberfläche öffnet beim Start den ersten noch offenen Schritt. Im schmalen Appfenster bleiben alle sechs Navigationspunkte oben sichtbar. „Hier weiterarbeiten“ führt jederzeit zu diesem Schritt; die ausführliche Fortschrittsübersicht steht unter den Arbeitsseiten. In Schritt 4 „Dateien vergleichen“ starten: bekannte Rezept-Überlagerungen und zulässige Text-Merges laufen ohne einzelne Variantenklicks. Die Zähler zeigen automatische Überlagerungen, Text-Merges und offene Konflikte getrennt. Bei unbekannten Fassungen stoppt der Ablauf mit einem Bericht.
+
 ## Modarchive
 
 Automatikfreigaben setzen, danach „Nächste fehlende Datei öffnen“. Die normale Browser-App wird für Nexus verwendet, damit dein vorhandenes Nexus-Login nutzbar bleibt. Download bestätigen, fertig herunterladen lassen. Nicht den Inhalt in den Spielordner kopieren.

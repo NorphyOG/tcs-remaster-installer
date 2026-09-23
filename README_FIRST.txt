@@ -5,7 +5,8 @@ TCS REMASTER INSTALLER 0.4.0 – HIER ANFANGEN
 3. Eigene Spielkopie auswählen. Freigaben prüfen, Automatik starten.
 4. „Nächste fehlende Datei öffnen“ → bei Nexus herunterladen.
    Nach Freigabe werden Downloads UND der lokale mods-Ordner beobachtet.
-5. Unklare Varianten prüfen; anschließend Dateiplan/Installation abschließen.
+5. Dateivergleich starten: bekannte Überschneidungen laufen ohne Dateiauswahl.
+   Unbekannte Fassungen stoppen mit einem Prüfbericht.
 6. Nach erfolgreicher Dateiprüfung „Geprüften Spielbuild starten“ benutzen.
 
 UPDATE: Neue UPDATE.cmd starten und ALTEN INSTALLERORDNER auswählen.

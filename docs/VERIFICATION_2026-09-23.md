@@ -1,5 +1,15 @@
 # Lokale Prüfung vom 23.09.2026
 
+## Aktueller Nachtrag: automatisches Zusammenführen und Navigation
+
+Der ursprüngliche ZIP-Befund unten bleibt als Eingangskontrolle erhalten. Nach der UI- und Merge-Änderung wurden **357 Python-Tests** im eingeschränkten Windows-Workspace ausgeführt: 356 bestanden, einer regulär übersprungen. Zwei weitere Tests (echte `tasklist`-Abfrage und Symlink-Erstellung) waren in dieser Sandbox nicht ausführbar. Die aktuelle Browser-Smoke-Suite bestand **46 Prüfungen** mit installiertem Chrome auf Windows und einem **lokalen Test-Transportadapter**; Browsernavigation/Sitzungsübergabe und echte OS-Downloads wurden damit nicht geprüft.
+
+Ein gespeicherter lokaler Prüfplan mit **66 offenen Konflikten** wurde ausschließlich gelesen: Alle 66 Dateikombinationen passen zu den jetzt kodierten Rezeptregeln. Das ist ein Regelabgleich des alten Plans, kein neuer Installations- oder Spieltest. Die synthetische Browserprobe löste zwei Autorendatei-Überlagerungen und einen nicht überlappenden Text-Merge automatisch, erstellte eine Mod-ZIP und prüfte deren kombinierten Text. Unbekannte Dateikombinationen bleiben blockiert.
+
+Der schmale Browser-Test bei 390 px hatte keinen horizontalen Seitenüberlauf. Die sechs Navigationsziele bleiben oben erreichbar; die Detailübersicht folgt nach dem aktiven Schritt. Aktuelle [Browser-Prüfungen](BROWSER_TEST_REPORT.json), [Python-Protokoll](UNIT_TEST_LOG.txt), [Merge-Regeln](MOD_COMPATIBILITY.md), [Vergleichsansicht](03-conflicts.png) und [schmale Navigation](11-narrow-navigation.png) sind beigefügt. Die privaten Spiel- und Modarchive wurden weder eingebaut noch im Spiel gestartet. Ein öffentlicher „spielbar“-Status ist weiterhin nicht begründet.
+
+Das aktualisierte private Prüf-ZIP enthält 98 Dateien der Positivliste und 97 verifizierte SHA-256-Einträge. `.local`, Laufzeitumgebung, Modarchive und Spieldaten stehen nicht auf der Positivliste.
+
 ## Herkunft und Umfang
 
 - Grundlage: `TCS_Remaster_Installer_0.4.0.zip`, SHA-256 `F9FC0F83530CCF64A8D5BBC7909D480BCCB7D8C2400BDD681131F6392FF758E5`.
