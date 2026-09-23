@@ -1,0 +1,2 @@
+# Keep package bytes identical across Git checkouts; SHA256SUMS checks exact files.
+* -text

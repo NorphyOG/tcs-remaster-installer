@@ -1,0 +1,267 @@
+{
+  "schema": 3,
+  "name": "TCS Remaster · Classic Plus",
+  "version": "0.4.0",
+  "checked_date": "2026-09-23",
+  "status": "INSTALLER_PREVIEW_NOT_GAME_TESTED",
+  "modules": [
+    {
+      "id": "modern-overhaul",
+      "name": "Modern Overhaul",
+      "file": "Hauptdatei: Modern Overhaul",
+      "version_hint": "2.2.2",
+      "author": "The Modern Overhaul Team",
+      "url": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/54?tab=files&file_id=583",
+      "description": "Modernisierte Figuren als Basis. Keine optionalen Audio- oder Kapitelpakete auswählen.",
+      "destination": "CHARS / STUFF / LEVELS → automatisch in den Build bzw. die vorbereitete Spielkopie",
+      "requires": [],
+      "root_mode": "main",
+      "default_enabled": true,
+      "nexus": {
+        "mod_id": 54,
+        "file_id": 583,
+        "file_name": "Lego Star Wars The Complete Saga Modern Overhaul",
+        "file_version": "2.2.2"
+      },
+      "watch_names": [
+        "Lego Star Wars The Complete Saga Modern Overhaul"
+      ],
+      "audit_status": "AUTHOR_PAGE_CHECKED_ARCHIVE_NOT_INSPECTED",
+      "file_list_checked_date": "2026-09-23"
+    },
+    {
+      "id": "ep3-additions",
+      "name": "Optional · Episode III, Kapitel 6",
+      "file": "Ep3 Ch6 Level Additions Addon",
+      "version_hint": "1.8 · Datei-ID 579",
+      "author": "Modern Overhaul Team",
+      "url": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/54?tab=files&file_id=579",
+      "description": "Zusatz zum Mustafar-Kapitel. Nicht im Standardprofil. Zusammen mit Infinities den passenden Vader-Enhancer-Patch wählen. Kein beliebiges anderes Duellpaket darüberlegen.",
+      "destination": "Leveldaten → nach Modern Overhaul",
+      "requires": [
+        "modern-overhaul"
+      ],
+      "root_mode": "main",
+      "default_enabled": false,
+      "nexus": {
+        "mod_id": 54,
+        "file_id": 579,
+        "file_name": "Ep3 Ch6 Level Additions Addon",
+        "file_version": "1.8"
+      },
+      "watch_names": [
+        "Ep3 Ch6 Level Additions Addon"
+      ],
+      "audit_status": "AUTHOR_PAGE_CHECKED_ARCHIVE_NOT_INSPECTED",
+      "file_list_checked_date": "2026-09-23"
+    },
+    {
+      "id": "additional-levels-mo",
+      "name": "Additional Levels",
+      "file": "Additional Levels (Modern Overhaul)",
+      "version_hint": "MO-Datei 1.4 · Datei-ID 578; nicht Standalone 2.3.1",
+      "author": "Bario The Weird",
+      "url": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/32?tab=files&file_id=578",
+      "description": "Nur die ausdrücklich für Modern Overhaul angebotene Datei. Nicht die Standalone-Datei.",
+      "destination": "CHARS / STUFF / LEVELS → automatisch, nach Modern Overhaul",
+      "requires": [
+        "modern-overhaul"
+      ],
+      "root_mode": "main",
+      "default_enabled": true,
+      "nexus": {
+        "mod_id": 32,
+        "file_id": 578,
+        "file_name": "Additional Levels (Modern Overhaul)",
+        "file_version": "1.4"
+      },
+      "watch_names": [
+        "Additional Levels Modern Overhaul"
+      ],
+      "audit_status": "AUTHOR_PAGE_CHECKED_ARCHIVE_NOT_INSPECTED",
+      "file_list_checked_date": "2026-09-23"
+    },
+    {
+      "id": "infinities",
+      "name": "Infinities · Refinement",
+      "file": "Refinement Overhaul",
+      "version_hint": "Modseite 1.2.1; Datei vom 02.03.2026",
+      "author": "ColbyDash",
+      "url": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files&file_id=634",
+      "description": "Gemeinsame Daten UND nur die Classic-Icon-Unterordner. MO-Icons, E3- und Film-Accurate-Alternativen bleiben aus.",
+      "destination": "Gemeinsame CHARS/STUFF + Classic-Icons → automatisch nach den Basis-Mods",
+      "requires": [
+        "modern-overhaul"
+      ],
+      "root_mode": "classic",
+      "default_enabled": true,
+      "nexus": {
+        "mod_id": 133,
+        "file_id": 634,
+        "file_name": "Refinement Overhaul",
+        "file_version": null
+      },
+      "watch_names": [
+        "Refinement Overhaul"
+      ],
+      "audit_status": "AUTHOR_PAGE_CHECKED_ARCHIVE_NOT_INSPECTED",
+      "download_id_source": "Public Nexus version-history link, rechecked 2026-09-23; direct API validation remains required for API downloads.",
+      "file_list_checked_date": "2026-09-23"
+    },
+    {
+      "id": "infinities-al-patch",
+      "name": "Infinities · Level-Patch",
+      "file": "Compatibility Patches - Additional Levels",
+      "version_hint": "Datei 1.1 vom 03.02.2026",
+      "author": "ColbyDash",
+      "url": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files&file_id=615",
+      "description": "Gemeinsame Patch-Daten UND Classic-Icon-Variante. Nicht den Vader-Enhancer-Patch verwenden.",
+      "destination": "Passende CHARS/STUFF-Patchdateien → zuletzt; Unterschiede werden geprüft",
+      "requires": [
+        "modern-overhaul",
+        "additional-levels-mo",
+        "infinities"
+      ],
+      "root_mode": "classic",
+      "default_enabled": true,
+      "nexus": {
+        "mod_id": 133,
+        "file_id": 615,
+        "file_name": "Compatibility Patches - Additional Levels",
+        "file_version": "1.1"
+      },
+      "watch_names": [
+        "Compatibility Patches Additional Levels"
+      ],
+      "audit_status": "AUTHOR_PAGE_CHECKED_ARCHIVE_NOT_INSPECTED",
+      "download_id_source": "Public Nexus version-history link, rechecked 2026-09-23; direct API validation remains required for API downloads.",
+      "file_list_checked_date": "2026-09-23"
+    },
+    {
+      "id": "infinities-vader-patch",
+      "name": "Optional · Infinities Mustafar-Patch",
+      "file": "Compatibility Patches - Vader Enhancer Addon",
+      "version_hint": "1.0",
+      "author": "ColbyDash",
+      "url": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files&file_id=620",
+      "description": "Nur zusammen mit dem Episode-III-Kapitel-6-Addon. Keine eigenständige Charaktererweiterung. Nur eine Icon-Variante wählen.",
+      "destination": "Passende CHARS/STUFF-Dateien → nach Infinities",
+      "requires": [
+        "modern-overhaul",
+        "ep3-additions",
+        "infinities"
+      ],
+      "root_mode": "classic",
+      "default_enabled": false,
+      "nexus": {
+        "mod_id": 133,
+        "file_id": 620,
+        "file_name": "Compatibility Patches - Vader Enhancer Addon",
+        "file_version": "1.0"
+      },
+      "watch_names": [
+        "Compatibility Patches Vader Enhancer Addon"
+      ],
+      "audit_status": "AUTHOR_PAGE_CHECKED_ARCHIVE_NOT_INSPECTED",
+      "download_id_source": "Public Nexus version-history link, rechecked 2026-09-23; direct API validation remains required for API downloads.",
+      "file_list_checked_date": "2026-09-23"
+    }
+  ],
+  "tools": [
+    {
+      "id": "python",
+      "name": "Python · Startprogramm",
+      "required": "Nur falls nicht vorhanden",
+      "url": "https://www.python.org/downloads/windows/",
+      "file": "Windows 64-bit / Python 3.10 oder neuer",
+      "destination": "STARTEN.cmd bietet eine lokale, portable Python-Einrichtung im Ordner .runtime an. Keine pip-Pakete nötig."
+    },
+    {
+      "id": "sevenzip",
+      "name": "7-Zip · Archive öffnen",
+      "required": "Nur für .7z / .rar",
+      "url": "https://www.7-zip.org/download.html",
+      "file": "Aktuelle stabile Windows-x64-Version",
+      "destination": "Mit Zustimmung lädt der Assistent das offizielle 7-Zip-MSI, prüft den GitHub-Asset-Hash und extrahiert es lokal. ZIP/Ordner gehen ohne Zusatztool; bereits installiertes 7-Zip wird verwendet."
+    },
+    {
+      "id": "reloaded",
+      "name": "Reloaded-II · alternativer Startweg",
+      "required": "Nur für den Export-Modus",
+      "url": "https://reloaded-project.github.io/Reloaded-II/QuickStart/",
+      "file": "Offizieller Installer; anschließend Reloaded File Redirector",
+      "destination": "Spiel-EXE in Reloaded hinzufügen, lokale Mod-ZIP hineinziehen und Mod + File Redirector aktivieren. TCS-Moddingvorbereitung weiterhin erforderlich."
+    },
+    {
+      "id": "reshade",
+      "name": "ReShade · optionaler Grafikfilter",
+      "required": "Optional, keine Voraussetzung für die Datenmods",
+      "url": "https://reshade.me/",
+      "file": "Normaler ReShade-Installer, nicht Full Add-on Support",
+      "destination": "Im Setup LEGOStarWarsSaga.exe → Direct3D 9 wählen. Danach im Spiel Home/Pos1 → TCS_ClassicPlus.ini auswählen."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Infinities: Installation, Varianten und Autorenrechte",
+      "url": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133"
+    },
+    {
+      "title": "Additional Levels: Modern-Overhaul-Datei",
+      "url": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/32?tab=files"
+    },
+    {
+      "title": "Modern Overhaul: Downloads und Autorenrechte",
+      "url": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/54"
+    },
+    {
+      "title": "Reloaded-II: offizieller Quick Start",
+      "url": "https://reloaded-project.github.io/Reloaded-II/QuickStart/"
+    },
+    {
+      "title": "Python: embeddable distribution",
+      "url": "https://docs.python.org/3/using/windows.html#the-embeddable-package"
+    },
+    {
+      "title": "ReShade: offizielle Projektseite",
+      "url": "https://reshade.me/"
+    },
+    {
+      "title": "QuickBMS: Autor und Kommandozeilendokumentation",
+      "url": "https://aluigi.altervista.org/quickbms.htm"
+    },
+    {
+      "title": "QuickBMS-Prüfsumme: Microsoft WinGet-Manifest",
+      "url": "https://github.com/microsoft/winget-pkgs/blob/master/manifests/a/aluigi/QuickBMS/0.12.0/aluigi.QuickBMS.installer.yaml"
+    },
+    {
+      "title": "TT-Extraktionsskript: Quelldatei und Zuordnung",
+      "url": "https://github.com/linterniGamer/Tt-Games-quickbms-scripts"
+    },
+    {
+      "title": "Nexus: offizielle API und persönlicher API-Schlüssel",
+      "url": "https://www.nexusmods.com/news/13921"
+    },
+    {
+      "title": "Nexus: API-Client-Implementierung",
+      "url": "https://github.com/Nexus-Mods/node-nexus-api"
+    },
+    {
+      "title": "7-Zip: offizielle Downloads",
+      "url": "https://www.7-zip.org/download.html"
+    }
+  ],
+  "verification": {
+    "original_mod_archives_inspected": false,
+    "author_download_hashes_known": false,
+    "windows_tested": false,
+    "gameplay_tested": false,
+    "reshade_gpu_tested": false,
+    "author_instructions_reviewed": true,
+    "optional_file_lists_reviewed": true,
+    "live_nexus_api_tested": false,
+    "quickbms_real_dat_tested": false,
+    "windows_uac_tested": false
+  },
+  "notice": "Autorenanleitungen und aktuelle Dateilisten geprüft. Originalarchive und Spiel sind nicht in diesem Paket enthalten oder hier spielgetestet. Exakte Nexus-IDs werden über die offizielle API aufgelöst; unbekannte Strukturen und Konflikte stoppen den Automatikmodus."
+}

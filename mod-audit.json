@@ -1,0 +1,201 @@
+{
+  "reviewed": "2026-09-23",
+  "scope": "Autorenseiten / Dateilisten; keine Prüfung der heruntergeladenen Archivbytes",
+  "default_recipe": [
+    "modern-overhaul",
+    "additional-levels-mo",
+    "infinities",
+    "infinities-al-patch"
+  ],
+  "items": [
+    {
+      "mod_id": 54,
+      "file": "Lego Star Wars The Complete Saga Modern Overhaul",
+      "version": "2.2.2",
+      "decision": "Standard",
+      "reason": "Charakterbasis; enthält auch Gameplay-/Rosteränderungen, nicht nur Texturen.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/54?tab=files"
+    },
+    {
+      "mod_id": 54,
+      "file": "Ep3 Ch6 Level Additions Addon",
+      "version": "1.8",
+      "decision": "Optional unterstützt",
+      "reason": "Nicht automatisch aktiv; Infinities-Vader-Patch mit auswählen.",
+      "requires": "Modern Overhaul + ggf. Infinities-Patch",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/54?tab=files"
+    },
+    {
+      "mod_id": 54,
+      "file": "Modern Cutscene Audio",
+      "version": "1.0",
+      "decision": "Bewusst aus",
+      "reason": "Zusätzliche Stimmen verändern das gewünschte klassische TCS-Gefühl. Alternative, nicht mit Original-Audio/Fix stapeln.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/54?tab=files"
+    },
+    {
+      "mod_id": 54,
+      "file": "Base Game Character and Level Names",
+      "version": "Base-Game",
+      "decision": "Prüfung erforderlich",
+      "reason": "ENGLISH.TXT kann Namen anderer Inhalte ersetzen; Sprache und tatsächliche Dateidifferenzen prüfen. Kein blindes Zusammenkleben.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/54?tab=files"
+    },
+    {
+      "mod_id": 54,
+      "file": "Base Game Cutscene Audio",
+      "version": "Base-Game",
+      "decision": "Wiederherstellungsalternative",
+      "reason": "Nicht zusätzlich zu Modern Cutscene Audio installieren. Standard bleibt ohne Sprach-Overhaul.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/54?tab=files"
+    },
+    {
+      "mod_id": 32,
+      "file": "Additional Levels",
+      "version": "2.3.1",
+      "decision": "Nicht diese Datei",
+      "reason": "Standalone-Variante passt nicht zum gewählten MO-Rezept.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/32?tab=files"
+    },
+    {
+      "mod_id": 32,
+      "file": "Additional Levels (Modern Overhaul)",
+      "version": "1.4",
+      "decision": "Standard",
+      "reason": "Auf Nexus eine Optionaldatei, aber im Rezept die benötigte MO-Variante.",
+      "requires": "Modern Overhaul",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/32?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Refinement Overhaul",
+      "version": "Datei vom 02.03.2026",
+      "decision": "Standard",
+      "reason": "Gemeinsame Daten plus genau ein Icon-Stil; der Assistent bevorzugt Classic nur bei eindeutiger Struktur.",
+      "requires": "Modern Overhaul",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Compatibility Patches - Additional Levels",
+      "version": "1.1",
+      "decision": "Standard",
+      "reason": "Passender Patch nach Infinities und Additional Levels.",
+      "requires": "MO + Additional Levels MO + Infinities",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Compatibility Patches - Vader Enhancer Addon",
+      "version": "1.0",
+      "decision": "Optional unterstützt",
+      "reason": "Mit Kapitel-6-Addon verwenden; nicht als Ersatz für Additional-Levels-Patch.",
+      "requires": "MO + Kapitel-6-Addon + Infinities",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Hint Icon Replacement - C-3PO",
+      "version": "1.0",
+      "decision": "Alternative / aus",
+      "reason": "Nicht mit anderem Hint-Icon-Paket stapeln; tatsächliche Dateimengen ungetestet.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "E3 2019 Designs",
+      "version": "1.0.2",
+      "decision": "Aus",
+      "reason": "Autoren dokumentieren UV-/Icon-Probleme und fehlende Cross-Module-Patches.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Barman Venkman",
+      "version": "1.0",
+      "decision": "Aus",
+      "reason": "Ändert die Cantina-Figur thematisch; nicht Teil des TCS-Classic-Profils.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "2020 Disguised Clone",
+      "version": "1.1.1",
+      "decision": "Aus",
+      "reason": "Alternative Charakter- und Icondateien; nicht ohne passenden Dateimerge hinzufügen.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Film Accurate Design Changes",
+      "version": "1.1.1",
+      "decision": "Aus",
+      "reason": "Ändert bewusst die Classic-Optik. Kein bestätigter universeller Kombinationspatch.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Hint Icon Replacement - Modern Barman",
+      "version": "1.2",
+      "decision": "Alternative / aus",
+      "reason": "Alternative zu C-3PO-Hint; weitere Icon-Varianten separat abgleichen.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Classic Icon Borders",
+      "version": "1.1",
+      "decision": "Aus",
+      "reason": "Zusätzliches Borderpaket ist nicht dasselbe wie Classic-Stil im Refinement-Paket. Nicht pauschal beides kopieren.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Sebastian Shaw Ghost Anakin",
+      "version": "1.1",
+      "decision": "Aus",
+      "reason": "Alternative Figur; Icon-Kollisionen mit anderen Zusatzpaketen möglich.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 133,
+      "file": "Icon Resource for Modern Overhaul - Infinities",
+      "version": "1.0",
+      "decision": "Nicht installieren",
+      "reason": "Autorenressource (Bildbearbeitung), kein notwendiger In-Game-Download. Auch ältere Dateien werden nicht automatisch gewählt.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/133?tab=files"
+    },
+    {
+      "mod_id": 169,
+      "file": "TCS Refined ReShade",
+      "version": "Autorenseite",
+      "decision": "Separater Grafikweg",
+      "reason": "Benötigt ReShade für Direct3D 9 und die richtigen Shader. Presetarchiv hier nicht geprüft; kein automatisches Einspielen fremder DLLs.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/169?tab=files"
+    },
+    {
+      "mod_id": 165,
+      "file": "Ultrawide and Screen mode",
+      "version": "1.0.1",
+      "decision": "Separater Runtime-Mod",
+      "reason": "ASI-Loader/Programmdateien; braucht eigene Sicherheits- und Konfliktprüfung. Noch kein automatischer Binäradapter; Steam-Start-Besonderheit beachten.",
+      "requires": "",
+      "source": "https://www.nexusmods.com/legostarwarsthecompletesaga/mods/165?tab=files"
+    }
+  ]
+}

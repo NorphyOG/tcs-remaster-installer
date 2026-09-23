@@ -1,0 +1,14 @@
+name: Verbesserung vorschlagen
+description: Problem, gewünschter Ablauf und prüfbarer Nutzen
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Welches Problem soll gelöst werden?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Gewünschter Ablauf und Erfolgskriterium

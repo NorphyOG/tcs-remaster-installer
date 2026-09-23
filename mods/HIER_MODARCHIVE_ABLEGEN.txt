@@ -1,0 +1,4 @@
+Hier vollständige ORIGINAL-Modarchive (.zip/.7z/.rar) ablegen.
+Nicht selbst entpacken. Im Installer „Downloadübernahme aktivieren“.
+Nur passende Rezeptdateien werden erkannt. Optionaldateien bleiben optional.
+Dieser Ordnerinhalt wird NICHT öffentlich exportiert (außer dieser Anleitung).

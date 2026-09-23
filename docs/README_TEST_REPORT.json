@@ -1,0 +1,15 @@
+{
+  "version": "0.4.0",
+  "passed": true,
+  "checks": [
+    "README HTML parsed",
+    "all local HTML references exist",
+    "all local Markdown references exist",
+    "no remote tracking scripts in offline README",
+    "start/update commands linked with browser fallback explanation",
+    "preview labelled as synthetic",
+    "public repository not yet published explicitly stated"
+  ],
+  "local_html_references": 10,
+  "local_markdown_references": 21
+}
