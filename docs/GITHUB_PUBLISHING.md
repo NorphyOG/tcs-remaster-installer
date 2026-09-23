@@ -1,6 +1,6 @@
 # GitHub-Repository – privater Entwurf
 
-**Ein öffentlicher Release ist nicht freigegeben.** Das verifizierte GitHub-Profil ist [NorphyOG](https://github.com/NorphyOG). Der Quellstand soll zunächst ausschließlich in einem **privaten** Repository liegen. Rechte an Original-Spielinhalten oder fremden Mods werden dadurch nicht übertragen.
+**Ein öffentlicher Release ist nicht freigegeben.** Der Quellstand liegt unter [NorphyOG/tcs-remaster-installer](https://github.com/NorphyOG/tcs-remaster-installer) als **privates** Repository. Rechte an Original-Spielinhalten oder fremden Mods werden dadurch nicht übertragen.
 
 ## Repository auffindbar beschreiben
 
@@ -25,7 +25,7 @@ Die Begriffe beschreiben die tatsächliche Funktion. Keine „official“, „co
 1. Im Installer „Weitergeben → GitHub-/Upload-ZIP erstellen“ wählen. **Nicht** deinen Arbeitsordner einschließlich `.local` hochladen.
 2. Export separat entpacken und `SHA256SUMS.txt` sowie Dateiliste prüfen. Keine Modarchive, Diagnose-Personendaten oder Spielpfade hinzufügen.
 3. Tests lokal ausführen; tatsächliche Grenzen in Release-Text und README behalten.
-4. Repository `tcs-remaster-installer` unter `NorphyOG` mit Sichtbarkeit **Private** anlegen. Quellstand und die tatsächlich geprüften Testergebnisse hochladen. `git remote -v` und die GitHub-Einstellung **Private** danach kontrollieren.
+4. Änderungen nur in den geprüften Quellstand übernehmen und in das bestehende **private** Repository pushen. `git remote -v`, Commit und die GitHub-Einstellung **Private** danach kontrollieren.
 5. Vor einem späteren Wechsel auf **Public** Quellstand, Commit-Historie, Lizenz-/Markenhinweise, Release-Archiv und echte Windows-/Spieltests erneut prüfen. Dieser Wechsel braucht eine eigene Entscheidung.
 6. Für einen Release Versionsnummer, ZIP, SHA-256, Änderungsübersicht und Testbericht zusammen bereitstellen. Kein Auto-Publishing-Workflow enthalten.
 

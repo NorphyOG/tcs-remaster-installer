@@ -60,8 +60,8 @@ Der Installer patcht keine Spiel-EXE, lädt keine Crack-DLL, verteilt keine Spie
 - [GitHub-Veröffentlichung vorbereiten](docs/GITHUB_PUBLISHING.md) · [Änderungen](RELEASE_NOTES.md)
 - [Prüfstand vom 23.09.2026](docs/VERIFICATION_2026-09-23.md)
 
-## Für ein privates GitHub-Repository vorbereitet
+## Privates GitHub-Repository
 
-Der Button **„Weitergeben → GitHub-/Upload-ZIP erstellen“** exportiert nur explizit freigegebene Quelldateien und Dokumentation. Er veröffentlicht nichts im Internet. Ein GitHub-Repository muss zunächst **privat** angelegt und vor jedem späteren Sichtbarkeitswechsel gesondert geprüft werden. Keine `.local`-Daten, Modarchive, Spielpfade, API-Schlüssel, Backups oder Browserprofile. CI und Vorlagen liegen unter `.github`.
+Der geprüfte Quellstand liegt zunächst **privat** unter [NorphyOG/tcs-remaster-installer](https://github.com/NorphyOG/tcs-remaster-installer). Der Button **„Weitergeben → GitHub-/Upload-ZIP erstellen“** exportiert nur explizit freigegebene Quelldateien und Dokumentation; er lädt nichts selbst hoch. Vor jedem späteren Sichtbarkeitswechsel ist eine eigene Prüfung nötig. Keine `.local`-Daten, Modarchive, Spielpfade, API-Schlüssel, Backups oder Browserprofile. CI und Vorlagen liegen unter `.github`.
 
 **Rechte:** Eigenständiges, inoffizielles Community-Werkzeug, nicht von LEGO, Lucasfilm, Disney, TT Games oder Nexus Mods. Namen dienen der Beschreibung der Kompatibilität. Fremde Mods bleiben bei ihren Autoren; deren Rechte und Bedingungen gelten unverändert. Der eigene Quellcode steht unter [MIT](LICENSE); siehe [Credits](CREDITS.md).
