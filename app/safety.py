@@ -7,6 +7,7 @@ import shutil
 import stat
 import subprocess
 import tempfile
+import uuid
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
@@ -116,7 +117,14 @@ def unpack_external(path: Path, workspace: Path, log=lambda _:None) -> Path:
     if not names or len(names)>MAX_FILES or total>MAX_BYTES: raise BuildError('Archiv ist leer oder überschreitet die Sicherheitsgrenzen.')
     checked_entries(names)
     if shutil.disk_usage(workspace).free < total+256*1024**2: raise BuildError('Zu wenig Speicher zum Entpacken.')
-    out=Path(tempfile.mkdtemp(prefix='unpacked-', dir=workspace))
+    if os.name == 'nt':
+        # Python's mkdtemp creates a private Windows DACL that a 7-Zip
+        # subprocess cannot always traverse under a restricted token.
+        # Inherit the protected workspace ACL instead.
+        out=no_links(workspace)/f'unpacked-{uuid.uuid4().hex}'
+        out.mkdir()
+    else:
+        out=Path(tempfile.mkdtemp(prefix='unpacked-', dir=workspace))
     try:
         check_cancel(log)
         log('Geprüfte Moddateien werden entpackt. Das Spiel bleibt dabei unverändert.')
@@ -166,7 +174,9 @@ class Source:
         try:
             if self.path.is_dir():
                 total_size=0
-                for root,dirs,files in os.walk(self.path,followlinks=False):
+                def walk_error(error):
+                    raise BuildError('Mod-Quellordner kann nicht gelesen werden. Archiv erneut prüfen.') from error
+                for root,dirs,files in os.walk(self.path,followlinks=False,onerror=walk_error):
                     for n in dirs+files:
                         if linked(Path(root)/n): raise BuildError('Verknüpfung im Quellordner ist nicht erlaubt.')
                     for n in files:

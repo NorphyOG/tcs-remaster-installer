@@ -47,7 +47,7 @@ Windows-Prozessprüfung liest Bytes statt lokalisierte tasklist-Ausgabe mit eine
 
 Der Update-Helfer ersetzt nur mitgelieferte Dateien aus der expliziten Positivliste nach Integritätsprüfung. Vorherige Programmdateien werden im alten Installer gesichert. `.local`/`.runtime`, Spielordner und fremde Dateien sind keine Update-Nutzlast. Mitgelieferte Checksummen sind eine Integritätskontrolle, keine unabhängige digitale Signatur. Nach einem Prozess-/Stromabbruch vorhandene Sicherungen nicht löschen.
 
-Vorbereitungs-Checkpoints werden anhand unveränderter Originalarchive und tatsächlicher Dateihashes revalidiert. Staging ist keine Quelle für ungeprüftes Weiterkopieren. Pause/Retry erteilt keine dauerhafte Installationsberechtigung nach Neustart. Native Windows-Ausführung und echte Spielarchive weiterhin nicht getestet.
+Vorbereitungs-Checkpoints werden anhand unveränderter Originalarchive und tatsächlicher Dateihashes revalidiert. Staging ist keine Quelle für ungeprüftes Weiterkopieren. Pause/Retry erteilt keine dauerhafte Installationsberechtigung nach Neustart. Der lokale Mod-Dateivergleich wurde unter Windows ausgeführt; Original-Spielarchive, Installation, Spielstart und das separate Windows-Appfenster sind weiterhin nicht vollständig getestet.
 
 ## Ergänzungen 0.3.2: Originaldaten sind nicht Modarchive
 

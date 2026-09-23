@@ -12,7 +12,7 @@ python -m playwright install chromium
 python tests/browser_smoke.py
 ```
 
-Die Tests verwenden eigene künstliche ZIP-/PAK-/Archivlisten, Modtexte und eine **nicht ausführbare** EXE-Attrappe. Sie sind keine Kopie eines Spiels. Windows-spezifische Prozessabfragen werden auf Nicht-Windows übersprungen. 7-Zip-Prozessausgaben werden für den fehlerhaften Listen-/Pfadfall simuliert; echte Nexus-Modarchive fehlen.
+Die Unit-Tests verwenden eigene künstliche ZIP-/PAK-/Archivlisten, Modtexte und eine **nicht ausführbare** EXE-Attrappe. Sie sind keine Kopie eines Spiels. Windows-spezifische Prozessabfragen werden auf Nicht-Windows übersprungen. 7-Zip-Prozessausgaben werden für den fehlerhaften Listen-/Pfadfall simuliert. Der separate lokale Dateivergleich mit sechs bereits importierten Modarchiven steht im aktuellen Prüfbericht.
 
 Die [lokale Windows-Prüfung vom 23.09.2026](VERIFICATION_2026-09-23.md) dokumentiert den aktuellen eingeschränkten Testlauf und die noch offenen Echtspiel-Nachweise getrennt vom ursprünglichen ZIP-Testbericht.
 

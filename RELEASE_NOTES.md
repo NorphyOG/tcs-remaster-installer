@@ -6,6 +6,8 @@
 - Nicht überlappende Textänderungen werden mit bestätigter unveränderter Referenz automatisch vereint. Unbekannte Kombinationen stoppen mit Diagnose, ohne Dateiauswahl in der Oberfläche.
 - Im schmalen Fenster bleiben alle sechs Schritte oben sichtbar. Der aktuelle Arbeitsschritt steht vor der langen Detailübersicht.
 - Synthetischer Browserlauf auf Windows: 46 Prüfungen mit Test-Transportadapter; reale Spielkompatibilität und Browser-Sitzungsübergabe stehen aus.
+- Windows-Entpackordner erben nun lesbare Workspace-Rechte für 7-Zip. Nicht mehr lesbare Import-Caches werden aus unveränderten, SHA-256-geprüften Archiven automatisch wiederhergestellt.
+- Frischer lokaler Vergleich mit sechs importierten Modarchiven: 2.110 Zieldateien, 220 automatische Überlagerungen, 0 offene Konflikte. Keine Installation und kein Spieltest.
 
 - Windows-Pfadtrenner aus 7-Zip normalisiert; jede Datei mit Einzelgröße geprüft. Keine Sicherheitsprüfung entfernt.
 - Sieben persistente Fortschrittsstufen statt scheinbarer Gesamt-100-Prozent-Anzeige.
@@ -17,7 +19,7 @@
 - GitHub-README, Anleitungen, Sicherheits-/Beitragsdateien, Issue-Vorlagen und CI vorbereitet. Nichts veröffentlicht.
 - Automatik behält sichere Stops, Prüfungen, Wiederherstellung und bereits geprüfte PAK-/DAT-Zwischenstände.
 
-Echte Modarchive, aktuelle Nexus-API-Downloads, Windows-Appfenster und das Spiel wurden für diese Version nicht ausgeführt. Synthetische Prüfungen und UI-Ergebnisse siehe docs/TEST_REPORT.json. Kein fertiges Komplett-Remake.
+Die sechs lokal importierten Modarchive wurden für den Dateivergleich gelesen. Aktuelle Nexus-API-Downloads, Installation, Windows-Appfenster und Spielstart wurden nicht durchgeführt. Synthetische Prüfungen und UI-Ergebnisse siehe docs/TEST_REPORT.json und docs/VERIFICATION_2026-09-23.md. Kein fertiges Komplett-Remake.
 
 ---
 

@@ -1,5 +1,6 @@
 import json, unittest, zipfile
 from pathlib import Path
+from unittest.mock import patch
 from helpers import Fixture
 from engine import BuildError, META, describe_game, guess_module, suggest_roots
 
@@ -27,6 +28,18 @@ class EngineTests(unittest.TestCase):
         with self.assertRaises(BuildError):self.p()
     def test_main_file_staged(self):
         self.f.add('modern-overhaul',{'CHARS/a.txt':'x'});p=self.p();self.assertEqual(p['counts']['files'],1);self.assertEqual(p['counts']['conflicts'],0)
+    def test_missing_external_cache_is_restored_from_pinned_archive(self):
+        source=self.f.add('modern-overhaul',{'CHARS/a.txt':'x'})
+        archive=self.f.root/'mod.7z';archive.write_bytes(b'fixture archive')
+        restored=self.f.root/'restored';(restored/'CHARS').mkdir(parents=True)
+        (restored/'CHARS'/'a.txt').write_text('x')
+        from safety import digest
+        source.update(path=str(self.f.root/'missing'),archive_path=str(archive),archive_sha256=digest(archive))
+        with patch('engine.unpack_external',return_value=restored) as unpack:
+            plan=self.p()
+        unpack.assert_called_once()
+        self.assertEqual(plan['counts']['conflicts'],0)
+        self.assertEqual(source['path'],str(restored))
     def test_identical_dedup(self):
         for m in ('modern-overhaul','additional-levels-mo'):self.f.add(m,{'CHARS/a.txt':'same'})
         p=self.p();self.assertEqual(p['records'][0]['strategy'],'identical-deduplicated');self.assertEqual(p['counts']['conflicts'],0)

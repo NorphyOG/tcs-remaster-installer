@@ -194,6 +194,26 @@ class Engine:
             archive_path=Path(item['archive_path'])
             if item.get('archive_sha256') and (not archive_path.is_file() or digest(no_links(archive_path))!=item['archive_sha256']):
                 raise BuildError('Archiv seit dem Import verändert. Erneut hinzufügen: '+item['name'])
+            if item.get('archive_sha256') and archive_path.suffix.lower() in ('.7z','.rar'):
+                try:
+                    with Source(item['path']) as cached:
+                        available=set(sel['roots'])<=set(cached.roots())
+                except (BuildError,OSError):
+                    available=False
+                if not available:
+                    log('Entpackte Modquelle nicht mehr lesbar; geprüftes Archiv erneut entpacken: '+m['name'])
+                    refreshed=unpack_external(archive_path,self.local/'unpacked',log=log)
+                    try:
+                        with Source(refreshed) as restored:
+                            if not set(sel['roots'])<=set(restored.roots()):
+                                raise BuildError('Die bestätigten Daten-Unterordner fehlen im erneut entpackten Archiv: '+m['name'])
+                    except Exception:
+                        shutil.rmtree(refreshed)
+                        raise
+                    item['path']=str(refreshed)
+                    self.save()
+                    stage(log,'downloads','done','Geprüftes Modarchiv erneut entpackt')
+                    phase(log,'compare','Modauswahl und Dateikonflikte prüfen …')
             check_cancel(log)
             log('Prüfe und hashe '+m['name'])
             with Source(item['path']) as src:
@@ -207,6 +227,8 @@ class Engine:
                         versions.setdefault(key,[]).append(entry)
             sources_used.append({'module':m['id'],'archive':item['name'],'sha256':item['archive_sha256'],'roots':sel['roots'],'authenticity_verified':False})
         checked_entries(list(display.values()))
+        stage(log,'downloads','done','Alle aktivierten Modquellen geprüft und gelesen')
+        phase(log,'compare','Dateien automatisch abgleichen …')
         decisions=settings.get('decisions',{}); records=[]; conflicts=[]
         for index,(key,raw) in enumerate(versions.items()):
             if index%300==0:
