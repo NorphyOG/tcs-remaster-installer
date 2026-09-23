@@ -5,7 +5,8 @@
 - Startfehler der Windows-Administratorabfrage liefern jetzt eine unterscheidbare Diagnose. Es gibt keinen direkten Schreib-Fallback ohne UAC.
 - Der lokale Installationslauf vom 24.09.2026 schrieb 2.110 Moddateien mit Sicherungsjournal und prüfte sie anschließend per Dateihash. Der Spielstart und die tatsächliche Modfunktion stehen noch aus.
 - Nach erfolgreicher Installation zeigt der Assistent den Prüfstatus und sperrt eine erneute Direktinstallation.
-- Regressionen: 363 Python-Tests (2 wegen fehlender Symlink-Rechte übersprungen) und 48 Browser-Prüfungen mit lokalem Test-Transportadapter.
+- „Hier weiterarbeiten“ führt nach der Installation direkt zum geprüften Spielstart oder, bei ungültiger Dateiprüfung, zur erneuten Prüfung.
+- Regressionen: 363 Python-Tests (2 wegen fehlender Symlink-Rechte übersprungen) und 51 Browser-Prüfungen mit lokalem Test-Transportadapter.
 
 ## Nachbesserung: automatische Dateiauflösung und Navigation
 

@@ -21,7 +21,9 @@ function nextStepNumber(){
 function updateNextStep(){
  const n=nextStepNumber(),button=$('resumeStepBtn');
  button.dataset.step=String(n);
- button.textContent=`Zu Schritt ${n}: ${stepNames[n]} →`;
+ button.textContent=app?.state.installed_game
+  ?app.state.readiness?.user_reported_game_test?'Spieltest ansehen →':app.state.readiness?.can_launch?'Zum Spielstart →':'Zur Installationsprüfung →'
+  :`Zu Schritt ${n}: ${stepNames[n]} →`;
 }
 function step(n){
  if($('progress').classList.contains('done'))$('progress').hidden=true;
@@ -127,6 +129,10 @@ async function download(kind,name){const response=await fetch('/api/download?kin
 async function preview(key){const result=await api('preview',{key});$('previewTitle').textContent=result.path;const host=$('previewContent');host.replaceChildren();const sections=result.variants.map(v=>({name:v.module+' · '+v.sha256.slice(0,12),text:v.text}));if(result.proposal!==null)sections.push({name:'Zusammengeführter Textvorschlag',text:result.proposal});for(const s of sections){const h=document.createElement('h3');h.textContent=s.name;host.appendChild(h);if(s.text===null){const p=document.createElement('p');p.className='muted';p.textContent='Binärdatei oder zu groß. Kein Text-Merge.';host.appendChild(p);}else{const text=document.createElement('textarea');text.readOnly=true;text.value=s.text;host.appendChild(text);}}$('previewDialog').showModal();}
 async function handleClick(event){
  const b=event.target.closest('button,a');if(!b)return;
+ if(b.id==='resumeStepBtn'&&app?.state.installed_game){
+  step(5);const target=$(app.state.readiness?.can_launch?'playCheckedBtn':'verifyBtn');
+  target.scrollIntoView({block:'center',behavior:'auto'});target.focus({preventScroll:true});return;
+ }
  if(b.dataset.step){step(Number(b.dataset.step));return;}
  if(b.dataset.uploadModule){pendingModule=b.dataset.uploadModule;$('archiveInput').click();return;}
  if(b.dataset.suggest){const m=app.profile.modules.find(x=>x.id===b.dataset.suggest),sel=app.state.selections[m.id],src=sourceById(sel.source_id);if(src){sel.roots=suggested(src.roots,m.root_mode);sel.confirmed=false;renderModules();markDirty(true);}return;}

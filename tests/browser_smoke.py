@@ -330,9 +330,10 @@ def main():
                 return commit_preparation(staged,server.app.engine.local,log)
             with patch.object(Engine,'_running',return_value=False), patch('preparation.Tools.quickbms',side_effect=AssertionError('Native fixture must not need external tools')):
                 server.app.start_job(native_preparation,action='prepare')
-                page.wait_for_function("document.querySelector('#pakCheckStatus').textContent.includes('2 Archive')",timeout=15000)
+                page.wait_for_function("document.querySelector('#pakCheckStatus').textContent.includes('2 Archive') || !document.querySelector('#jobError').hidden",timeout=45000)
                 page.wait_for_function("document.querySelector('#jobStatus').textContent.includes('abgeschlossen')",timeout=15000)
             assert page.locator('#jobError').is_hidden()
+            assert '2 Archive' in page.locator('#pakCheckStatus').inner_text()
             assert (native/str(Path(KASHYYYK).parent)/'TAIL.TXT').read_bytes()==b'0123456789abc'
             checks.append('Native binary PAK table and 13-byte last entry passed without a QuickBMS process')
             summary=server.app.diagnostic()['job']['pak_checks']
@@ -403,11 +404,19 @@ def main():
             assert page.locator('#installBtn').is_disabled()
             assert 'Moddateien installiert' in page.locator('#installGate').inner_text()
             checks.append('Completed installation replaces install prompt and disables repeat installation')
+            assert 'Installationsprüfung' in page.locator('#resumeStepBtn').inner_text()
+            page.click('#resumeStepBtn')
+            assert page.evaluate('document.activeElement.id')=='verifyBtn'
+            checks.append('Resume action jumps to file verification immediately after installation')
             page.click('#verifyBtn')
             page.wait_for_function("document.querySelector('#readinessStatus').textContent.includes('installierte Dateien geprüft')",timeout=15000)
             assert not page.locator('#playCheckedBtn').is_disabled()
             assert page.locator('#confirmGameBtn').is_disabled()
             checks.append('Real synthetic installation is hash-verified through UI, but does not certify gameplay')
+            assert 'Zum Spielstart' in page.locator('#resumeStepBtn').inner_text()
+            page.click('#resumeStepBtn')
+            assert page.evaluate('document.activeElement.id')=='playCheckedBtn'
+            checks.append('Resume action jumps directly to checked game launch after verification')
             (f.game/'CHARS/Boba/Body.gsc').write_bytes(b'changed after installation')
             with patch('builtins.print'):
                 page.click('#verifyBtn')
@@ -420,6 +429,10 @@ def main():
             assert 'erneut prüfen' in page.locator('#autoHeadline').inner_text()
             assert 'geprüft' not in page.locator('#autoMessage').inner_text()
             checks.append('Invalidated file verification is not shown as a verified installation')
+            assert 'Installationsprüfung' in page.locator('#resumeStepBtn').inner_text()
+            page.click('#resumeStepBtn')
+            assert page.evaluate('document.activeElement.id')=='verifyBtn'
+            checks.append('Resume action jumps to recheck when installed files changed')
             page.set_viewport_size({'width':390,'height':844})
             assert page.evaluate('document.documentElement.scrollWidth<=window.innerWidth+2')
             checks.append('Stage cards and completion controls remain responsive at 390px')

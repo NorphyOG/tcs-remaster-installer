@@ -44,13 +44,16 @@
     "Optional Vader patch remains disabled by default",
     "Play and game-tested actions unavailable without installed/started build",
     "Completed installation replaces install prompt and disables repeat installation",
+    "Resume action jumps to file verification immediately after installation",
     "Real synthetic installation is hash-verified through UI, but does not certify gameplay",
+    "Resume action jumps directly to checked game launch after verification",
     "Changed installed file blocks final verification without overwriting it",
     "Invalidated file verification is not shown as a verified installation",
+    "Resume action jumps to recheck when installed files changed",
     "Stage cards and completion controls remain responsive at 390px",
     "No browser JavaScript exceptions"
   ],
-  "count": 48,
+  "count": 51,
   "screenshots": [
     "04-automation.png",
     "01-downloads.png",
