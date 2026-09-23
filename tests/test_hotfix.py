@@ -234,11 +234,17 @@ class AutomationRegressionTests(unittest.TestCase):
 
 class DiagnosticsRegressionTests(unittest.TestCase):
     def setUp(self):self.f=Fixture();self.app=App(self.f.base)
-    def tearDown(self):self.f.close()
+    def tearDown(self):
+        if self.app.job_thread is not None:
+            self.app.job_thread.join(timeout=5)
+            self.assertFalse(self.app.job_thread.is_alive())
+        self.f.close()
     def wait(self):
         until=time.monotonic()+5
         while self.app.job['running'] and time.monotonic()<until:time.sleep(.01)
         self.assertFalse(self.app.job['running'])
+        self.app.job_thread.join(timeout=5)
+        self.assertFalse(self.app.job_thread.is_alive())
     def test_error_persists_with_phase_and_no_secret(self):
         self.app.workflow.nexus._key='MY-PRIVATE-API-KEY';self.app.engine.state['game']=str(self.f.game)
         def fail(log):

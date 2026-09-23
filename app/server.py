@@ -159,7 +159,7 @@ class App:
     def __init__(self,base:Path=BASE):
         self.engine=Engine(base); self.token=secrets.token_urlsafe(32); self.origin=''
         self.job={'id':'','running':False,'logs':[],'result':None,'error':None,'phase':'idle','phase_label':'Bereit','status':'idle'}
-        self.job_lock=threading.RLock();self.cancel_event=threading.Event()
+        self.job_lock=threading.RLock();self.cancel_event=threading.Event();self.job_thread=None
         self.logs=no_links(self.engine.local/'logs');self.logs.mkdir(exist_ok=True)
         self.last_error=None
         previous=self.logs/'last-error.json'
@@ -253,7 +253,8 @@ class App:
                     job['running']=False;job['finished']=datetime.now(timezone.utc).isoformat();self.save_job()
                 if self.cancel_event.is_set():
                     self.engine.state['automation']['armed']=False;self.engine.save()
-        threading.Thread(target=run,daemon=True).start()
+        self.job_thread=threading.Thread(target=run,daemon=True)
+        self.job_thread.start()
         return {'started':True,'id':job['id']}
     def public_state(self):
         with self.job_lock: job=dict(self.job)
